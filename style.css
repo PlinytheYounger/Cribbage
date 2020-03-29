@@ -1,0 +1,106 @@
+* {
+    border: 1px solid red;
+}
+
+/*/////// GENERAL STYLING & FONTS ////////*/
+
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #F4EBE9;
+}
+
+h1 {
+    font-size: 3em;
+}
+
+h2 {
+    font-size: 2em;
+}
+
+button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin: 10px;
+    background-color: #AE585E;
+    font-size: 1.5em;
+}
+
+/*/////// HEADER DIV ////////*/
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+/*/////// MAIN DIV ////////*/
+
+main {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+#modals {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+    margin-right: 5px;
+    font-size: 1.5em;
+}
+
+#startGame {
+    padding: 10px;
+    background-color: #37574B;
+}
+
+#board {
+    width: 60%;
+    margin: 10px;
+    text-align: center;
+}
+
+main > .card {
+    width: 20%;
+}
+
+
+/*/////// SECTION DIV ////////*/
+
+section {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.card > img {
+    width: 75%;
+}
+
+#nextRound {
+    float: center;
+}
+
+/*/////// FOOTER DIV ////////*/
+
+
+
+/*/////// ANIMATIONS & TRANSITIONS ////////*/
+
+
+
+
+/*/////// MEDIA QUERIES & RESPONSIVE DESIGN ////////*/

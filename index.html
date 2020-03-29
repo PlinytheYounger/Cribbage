@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cribbage 2.0</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Cribbage</h1>
+    </header>
+
+    <!-- main div to hold modals/buttons, cribbage board & flipped card -->
+    <main>
+        <div id="modals">
+            <button class="modal">Settings</button>
+            <button class="modal">How to Play</button>
+            <button class="modal" id="startGame">Start Game</button>
+        </div>
+
+        <div id="board">
+            <img src="images/cribbageBoardTemplate.jpg" alt="cribbage board">
+            <h2>peg placeholder</h2>
+        </div>
+
+        <div class="card" id="flippedCard">
+            <img src="images/card_example.png" alt="card">
+            <h2>Flipped Card</h2>
+        </div>
+
+    </main>
+
+    <!-- section to hold each players' cards, discard pile (face-up), and crib -->
+    <section>
+        <div class="card" id="player1">
+            <img src="images/card_example.png" alt="card">
+            <h2>Player 1</h2>
+            <button class="go">Go!</button>
+            <h2>Player 1 Score: <span>0</span></h2>
+        </div>
+
+        <div class="card" id="gameplayCards">
+            <img src="images/card_example.png" alt="card">
+            <h2>Gameplay Cards</h2>
+        </div>
+
+        <div id="nextRound">
+            <h3>Player X scored X points.</h3>
+            <h3>Player Y scored Y points.</h3>
+            <button id="shuffle">Next Round?</button>
+        </div>
+
+        <div class="card" id="crib">
+            <img src="images/card_example.png" alt="card">
+            <h2>Crib</h2>
+        </div>
+
+        <div class="card" id="player2">
+            <img src="images/card_example.png" alt="card">
+            <h2>Player 2</h2>
+            <button class="go">Go!</button>
+            <h2>Player 2 Score: <span>0</span></h2>
+        </div>
+
+    </section>
+
+    <!-- footer to hold information to contact me -->
+    <footer>
+
+    </footer>
+    
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -115,16 +115,24 @@ let dealer;
 $(() => {
 // CACHED DOM ELEMENTS:
     // 1. Settings Modal Button
+    const $settings = $('#modals').children('button').eq(0);
     // 2. How to Play Modal Button
+    const $howTo = $('#modals').children('button').eq(1);
     // 3. Start Game button
+    const $startGame = $('#startGame');
     // 4. Gameboard [to manipulate pegs / append pegs to it]
+    const $gameboard = $('#board');
     // 5. Pegs (4) - [For ease, players always have some colored pegs]
-    // 6. Flipped card
+    const $peg1 = $('#board > h2');
+    // 6. Starter card
+    const $starterCard = $('#starterCard');
     // 7. Go Button
+    const $go = $('.go');
     // 8. Player 1 Score text, Player 2 score text
+    const $player1Score = $('section > div:first > h2 > span');
+    const $player2Score = $('section > div:last > h2 > span');
     // 9. Player 1 hand, Gameplay Cards, Crib, Player 2 hand
-
-
+    
 // //function to shuffle the cards
 // const shuffleCards = (array) => {
 //     let m = array.length, t, i;

@@ -58,20 +58,61 @@ console.log('hello');
 
 ///// VARIABLES, OBJECTS & ARRAYS /////
 
+// generate a deck of card objects & store it in an array > this will be the deck
+    // each card object will contain:
+        // suit
+        // face
+        // point value (for counting)
+        // image
+        // faceup / facedown (boolean)
+
+        const suit = ['clubs', 'spade', 'diamond', 'heart'];
+        const face = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', "Queen", "King"];
+        const deckArray = [];
+    
+        class Deck {
+            constructor(suit, face, faceUp = false) {
+                this.suit = suit;
+                this.face = face;
+                this.faceUp = faceUp;
+            }
+            generateCards() {
+                for (let i = 0; i < suit.length; i++) {
+                    for (let j = 0; j < face.length; j++) {
+                        const newCard = new Deck(suit[i], face[j], this.faceUp);
+                        deckArray.push(newCard);
+                    }
+                }
+            }
+        }
+    
+        const newCard = new Deck('clubs', 'Ace');
+        newCard.generateCards();
+        console.log(deckArray);
+
 // player1Array/player2Array = create an array to hold player 1 & player 2 cards (while in gameplay, these cards will change each hand) [should only hold 6 elements **// should be emptied after each round]
+let player1Array = [];
+let player2Array = [];
 
 // cribArray = create an array to hold the crib during gameplay [should only hold 4 elements **// should be emptied after each round]
+let cribArray = [];
 
 // gameplayArray = create an array to hold the gameplay cards - in order to match with previous cards for points (pair, 3 of a kind)
+let gameplayArray = [];
 
 // totalPointsPlayer1 = Keeps track of player 1's total points through the game, each time the peg moves, add however many to this total
+let totalPointsPlayer1;
 
 // totalPointsPlayer2 = Keeps track of player 2's total points through the game, each time the peg moves, add however many to this total 
+let totalPointsPlayer2;
 
 // gameplayCounter = keeps track of the total of the cards in the gameplayArray for us in checkForPoints() function >> meaning have we reached 31 for the round? 
+let gameplayCounter;
 
 // dealer = used to toggle between players (i.e. whoever is dealer gets the crib, whoever isn't starts play & donates to the crib)
+let dealer;
 
+$(() => {
 // CACHED DOM ELEMENTS:
     // 1. Settings Modal Button
     // 2. How to Play Modal Button
@@ -83,18 +124,29 @@ console.log('hello');
     // 8. Player 1 Score text, Player 2 score text
     // 9. Player 1 hand, Gameplay Cards, Crib, Player 2 hand
 
-// generate a deck of card objects & store it in an array > this will be the deck
-    // each card object will contain:
-        // suit
-        // face
-        // point value (for counting)
-        // image
-        // faceup / facedown (boolean)
 
-    const suit = ['clubs', 'spade', 'diamond', 'heart'];
-    const face = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', "Queen", "King"];
-    const values = [];
-    const deckArray = [];
+// //function to shuffle the cards
+// const shuffleCards = (array) => {
+//     let m = array.length, t, i;
+//     //While there are still elements to shuffle continue shuffling
+//     while (m) {
+//         //Pick a random remaining element that has not been selected
+//         i = Math.floor(Math.random()*m--);
+//         //swap with current element
+//         t = array[m];
+//         array[m] = array[i];
+//         array[i] = t;
+//     }
+//     return array;
+// }
+
+// const newDeck = new Deck('clubs','ace',11);
+// newDeck.generateCards();
+// // console.log(newDeck);
+
+// shuffleCards(newDeck);
+// console.log(newDeck)
+
 
 ///// FUNCTIONS /////
 
@@ -162,93 +214,34 @@ console.log('hello');
 
 // checkForRoundPoints() = function to check whether the gameplayArray equals 8 and to add up end-of-game points
     // If gameplayArray.length === 8 then end round & count points
-        // sort through each array 
-        // points (store in object?)
-        // each combo that equals 15 is 2 points
-        // each combo that is a pair equals 2 points
-        // each combo that is a 3+ cards in sequence, count 1 per card
-        // 4 cards of the same suit, 1 per card
-        // If jack is the same suit as flipped card in hand or crib, +1 point
+        // FOR player1Array {
+            // different sorting methods for each? 
+            // points (store in object?)
+            // each combo that equals 15 is 2 points
+            // each combo that is a pair equals 2 points
+            // each combo that is a 3+ cards in sequence, count 1 per card
+            // 4 cards of the same suit, 1 per card
+            // If jack is the same suit as flipped card in hand or crib, +1 point
+        // }
+        // FOR player2Array {
+            // different sorting methods for each? 
+            // points (store in object?)
+            // each combo that equals 15 is 2 points
+            // each combo that is a pair equals 2 points
+            // each combo that is a 3+ cards in sequence, count 1 per card
+            // 4 cards of the same suit, 1 per card
+            // If jack is the same suit as flipped card in hand or crib, +1 point
+        // }
 
 // randomComputerCard() = function to generate a random card from the player2Array
 
 // checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
+    // >> iterate through array
+        // >> if 
 
 ///// EVENT LISTENERS & HANDLERS /////
 
-
-
-
-
-// EXAMPLE //
-
-//     //generate a deck of cards & store in an array
-// //create an array
-// //13 cards per suit (loop through 1-13?)
-// //4 suits
-// //boolean value = true/false
-
-// //create arrays to store
-// const suit = ["clubs", "spade", "diamond", "heart"];
-// const face = ['Ace', 2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack', "Queen", "King"];
-// const value = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
-// const deckArray = [];
-
-
-// // const newCard = new Card(suit[0], face[0], value[0]);
-// // console.log(newCard);
-
-// class Deck {
-//     constructor(suit,face,value, faceUp = false) {
-//         this.suit = suit;
-//         this.face = face;
-//         this.value = value;
-//         this.faceUp = faceUp;
-//     }
-//     generateCards() {
-//         //iterate over the suit and the face - use the face length to assign the value from the array since they're the same length.
-//         for (let i = 0; i < suit.length; i++) {
-//             for (let j = 0; j < face.length; j++) {
-//                 const newCard = new Deck(suit[i], face[j], value[j]);
-//                 deckArray.push(newCard);
-//             }
-//         }
-//     }
-// }
-
-// //function to shuffle the cards
-// const shuffleCards = (array) => {
-//     let m = array.length, t, i;
-//     //While there are still elements to shuffle continue shuffling
-//     while (m) {
-//         //Pick a random remaining element that has not been selected
-//         i = Math.floor(Math.random()*m--);
-//         //swap with current element
-//         t = array[m];
-//         array[m] = array[i];
-//         array[i] = t;
-//     }
-//     return array;
-// }
-
-// const newDeck = new Deck('clubs','ace',11);
-// newDeck.generateCards();
-// // console.log(newDeck);
-
-// shuffleCards(newDeck);
-// console.log(newDeck)
-
-
-// // const myArray = [5 ,10 ,500, 20];
-
-// // for (let i = 0; i < myArray.length; i++) {
-// //     if (myArray[i] < 100) {
-// //         console.log("little number");
-// //     } else if (myArray[i] > 100) {
-// //         console.log("big number");
-// //     } 
-// // }
-
-$(() => {
-    // generateCards();
+// On click of settings > display settings options
+// On click of How to Play > display instructions
+// On click of Start Game > run startGame() function
 });

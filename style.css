@@ -9,7 +9,6 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-size: 14px;
-    background-color: #F4EBE9;
 }
 
 h1 {
@@ -87,7 +86,7 @@ section {
 }
 
 .card > img {
-    width: 75%;
+    width: 70%;
 }
 
 #nextRound {

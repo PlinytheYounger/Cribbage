@@ -133,9 +133,11 @@ $(() => {
     const $player1Score = $('section > div:first > h2 > span');
     const $player2Score = $('section > div:last > h2 > span');
     // 9. Player 1 hand, Gameplay Cards, Crib, Player 2 hand
-    const $player1Hand = $('#player1').children('h2').eq(2).children('span');
+    const $player1Hand = $('#player1').children('h2').eq(1).children('span');
     // 10. Player 1
     const $player1Div = $('#player1');
+    // 11. Player 2
+    const $player2Div = $('#player2');
     
 // //function to shuffle the cards
 // const shuffleCards = (array) => {
@@ -185,11 +187,13 @@ const dealCards = () => {
         // splice from deckArray
         deckArray.splice(number, 1);
     }
-
+    console.log(player1Array);
     for (let i = 0; i < 6; i++) {
         let number  = Math.floor(Math.random()*deckArray.length);
-        player2Array.push(deckArray[number]);    
+        player2Array.push(deckArray[number]); 
+        deckArray.splice(number, 1);   
     }
+    console.log(player2Array);
 }
 
 
@@ -199,6 +203,11 @@ const displayCards = () => {
         const $div = $('<div>').addClass('hand').appendTo($player1Div);
         $('<h2>').text(player1Array[i].face).appendTo($div);
         $('<h2>').text(player2Array[i].suit).appendTo($div);
+    }
+    for (let j = 0; j < player2Array.length; j++) {
+        const $div = $('<div>').addClass('hand').appendTo($player2Div);
+        $('<h2>').text(player2Array[j].face).appendTo($div);
+        $('<h2>').text(player2Array[j].suit).appendTo($div);
     }
 }
 
@@ -216,12 +225,25 @@ const startGame = () => {
     // EXTRA ADD: dealing the cards to the players using animation
     // Player 1 cards are face-up; Player 2 either disappear or face-down
     displayCards();
-
     // run crib()
+    crib(player1Array, player2Array);
     // run gameplay()
 }
 
 // crib()
+const crib = (arr1, arr2) => {
+    // add 2 cards randomly for player 2 array
+    for (let i = 0; i < 2; i++) {
+        let num = Math.floor(Math.random()*arr2.length);
+        cribArray.push(arr2[num]);
+        arr2.splice(num, 1);
+    }
+    console.log(arr2);
+    $player1Div.children().on('click', () => {
+        cribArray.push($(event.currentTarget).indexOf());
+    })
+    console.log(`crib array: ${cribArray[0].face}`)
+}
     // Add 2 cards to the crib > Player clicks (or drag & drops to the crib pile)
     // when player clicks & drags a card, add that card to the crib array for this round
     // When there are 2 cards from player 1, randomly pick 2 cards from player 2 array and add to crib array

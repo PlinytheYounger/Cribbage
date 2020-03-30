@@ -2,6 +2,15 @@
     border: 1px solid red;
 } */
 
+/*/// COLOR CODES /////*/
+
+/* light teal green/blue: #C6DFD6
+darker teal green/blue: #ACCCC4
+dark gray: #464545
+dark beige: #C4BCB8
+light beige: #E2DFD8
+white/eggshell: #EDECEA */
+
 /*/////// GENERAL STYLING & FONTS ////////*/
 
 body {
@@ -9,6 +18,7 @@ body {
     padding: 0;
     box-sizing: border-box;
     font-size: 14px;
+    background-color: #EDECEA;
 }
 
 h1 {
@@ -23,7 +33,7 @@ button {
     padding-top: 10px;
     padding-bottom: 10px;
     margin: 10px;
-    background-color: #AE585E;
+    background-color: #C6DFD6;
     font-size: 1.5em;
 }
 
@@ -55,7 +65,7 @@ main {
 
 #startGame {
     padding: 10px;
-    background-color: #37574B;
+    background-color: #ACCCC4;
 }
 
 #board {
@@ -97,12 +107,16 @@ section {
     display: flex;
     justify-content: space-around;
     margin: 5px;
-    background-color: lightblue;
+    background-color: #C4BCB8;
 }
 
 .hand > h2 {
     margin: 10px;
     padding: 10px;
+}
+
+.hidden {
+    opacity: 0;
 }
 
 /*/////// FOOTER DIV ////////*/

@@ -108,6 +108,8 @@ section {
     justify-content: space-around;
     margin: 5px;
     background-color: #C4BCB8;
+    height: 72px;
+    width: 200px;
 }
 
 .hand > h2 {

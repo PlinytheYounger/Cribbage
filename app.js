@@ -66,29 +66,29 @@ console.log('hello');
         // image
         // faceup / facedown (boolean)
 
-        const suit = ['clubs', 'spade', 'diamond', 'heart'];
-        const face = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', "Queen", "King"];
-        const deckArray = [];
-    
-        class Deck {
-            constructor(suit, face, faceUp = false) {
-                this.suit = suit;
-                this.face = face;
-                this.faceUp = faceUp;
-            }
-            generateCards() {
-                for (let i = 0; i < suit.length; i++) {
-                    for (let j = 0; j < face.length; j++) {
-                        const newCard = new Deck(suit[i], face[j], this.faceUp);
-                        deckArray.push(newCard);
-                    }
-                }
+const suit = ['clubs', 'spade', 'diamond', 'heart'];
+const face = ['Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', "Queen", "King"];
+const deckArray = [];
+
+class Deck {
+    constructor(suit, face, faceUp = false) {
+        this.suit = suit;
+        this.face = face;
+        this.faceUp = faceUp;
+    }
+    generateCards() {
+        for (let i = 0; i < suit.length; i++) {
+            for (let j = 0; j < face.length; j++) {
+                const newCard = new Deck(suit[i], face[j], this.faceUp);
+                deckArray.push(newCard);
             }
         }
-    
-        const newCard = new Deck('clubs', 'Ace');
-        newCard.generateCards();
-        console.log(deckArray);
+    }
+}
+
+const newCard = new Deck('clubs', 'Ace');
+newCard.generateCards();
+console.log(deckArray);
 
 // player1Array/player2Array = create an array to hold player 1 & player 2 cards (while in gameplay, these cards will change each hand) [should only hold 6 elements **// should be emptied after each round]
 let player1Array = [];
@@ -112,6 +112,7 @@ let gameplayCounter;
 // dealer = used to toggle between players (i.e. whoever is dealer gets the crib, whoever isn't starts play & donates to the crib)
 let dealer;
 
+// jquery onload function
 $(() => {
 // CACHED DOM ELEMENTS:
     // 1. Settings Modal Button
@@ -132,6 +133,9 @@ $(() => {
     const $player1Score = $('section > div:first > h2 > span');
     const $player2Score = $('section > div:last > h2 > span');
     // 9. Player 1 hand, Gameplay Cards, Crib, Player 2 hand
+    const $player1Hand = $('#player1').children('h2').eq(2).children('span');
+    // 10. Player 1
+    const $player1Div = $('#player1');
     
 // //function to shuffle the cards
 // const shuffleCards = (array) => {
@@ -157,14 +161,65 @@ $(() => {
 
 
 ///// FUNCTIONS /////
+// randomComputerCard() = function to generate a random card from the player2Array
 
-// startGame()
-    // when player clicks "start game" or "next round", start gameplay
-    // Randomly choose "dealer"
+// choose dealer
+const chooseDealer = () => {
+    let num = Math.floor(Math.random()*2);
+    if (num === 1) {
+        dealer = "player1"; 
+    } else if (num === 2) {
+        dealer = "player2";
+    }
+    console.log(dealer);
+}
+
+// random cards for player arrays
+const dealCards = () => {
+    // dealing 6 cards
+    for (let i = 0; i < 6; i++) {
+        // generate random number no greater than length of deckArray
+        let number  = Math.floor(Math.random()*deckArray.length);
+        // check to make sure no duplicates push to playerArray
+        player1Array.push(deckArray[number]);
+        // splice from deckArray
+        deckArray.splice(number, 1);
+    }
+
+    for (let i = 0; i < 6; i++) {
+        let number  = Math.floor(Math.random()*deckArray.length);
+        player2Array.push(deckArray[number]);    
+    }
+}
+
+
+// create hand h2's to add cards to
+const displayCards = () => {
+    for (let i = 0; i < player1Array.length; i++) {
+        const $div = $('<div>').addClass('hand').appendTo($player1Div);
+        $('<h2>').text(player1Array[i].face).appendTo($div);
+        $('<h2>').text(player2Array[i].suit).appendTo($div);
+    }
+}
+
+
+
+// checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
+    // >> iterate through array
+        // >> if 
+
+// startGame() = when player clicks 'startGame' run startGame function
+const startGame = () => {
     // EXTRA ADD: shuffle the deck using animation
     // assign each player gameplay array 6 random cards from the deckArray
+    dealCards();
     // EXTRA ADD: dealing the cards to the players using animation
     // Player 1 cards are face-up; Player 2 either disappear or face-down
+    displayCards();
+
+    // run crib()
+    // run gameplay()
+}
 
 // crib()
     // Add 2 cards to the crib > Player clicks (or drag & drops to the crib pile)
@@ -174,8 +229,10 @@ $(() => {
 
 // gameplay()
     // create gameplay function that runs each round
-    // Dealer goes first
-    // If player 1 equals dealer
+    // Randomly choose "dealer"
+    chooseDealer();
+    // non-dealer goes first
+    // If player 1 equals non-dealer
         // Then while the gameplayArray.length < 8
             // >> Player 1 (human) gets to drag & drop into the Gameplay Cards pile (face-up)
                 // >> checkForGameplayPoints()
@@ -184,7 +241,7 @@ $(() => {
             // >> then run randomComputerCard() function
                 // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
-    // Else if player 2 equals dealer
+    // Else if player 2 equals non-dealer
         // Then while the length of gameplayArray < 8  
             // >> checkForComputerGo()
             // >> run randomComputerCard()
@@ -240,16 +297,15 @@ $(() => {
             // 4 cards of the same suit, 1 per card
             // If jack is the same suit as flipped card in hand or crib, +1 point
         // }
+        // FOR crib {}
 
-// randomComputerCard() = function to generate a random card from the player2Array
-
-// checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
-    // >> iterate through array
-        // >> if 
 
 ///// EVENT LISTENERS & HANDLERS /////
 
 // On click of settings > display settings options
 // On click of How to Play > display instructions
 // On click of Start Game > run startGame() function
+$startGame.on('click', startGame);
+
+
 });

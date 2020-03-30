@@ -74,7 +74,7 @@ main > .card {
 section {
     display: flex;
     justify-content: space-around;
-    align-items: center;
+    align-items: flex-start;
     padding-top: 20px;
     padding-bottom: 20px;
 }
@@ -91,6 +91,18 @@ section {
 
 #nextRound {
     float: center;
+}
+
+.hand {
+    display: flex;
+    justify-content: space-around;
+    margin: 5px;
+    background-color: lightblue;
+}
+
+.hand > h2 {
+    margin: 10px;
+    padding: 10px;
 }
 
 /*/////// FOOTER DIV ////////*/

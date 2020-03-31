@@ -138,6 +138,8 @@ $(() => {
     const $player2Div = $('#player2');
     // 12. Crib Button
     const $cribButton = $('#cribButton');
+    // // 13. Player 1 cards
+    // const $player1Cards = $('.hand');
 
 ///// FUNCTIONS /////
 // randomComputerCard() = function to generate a random card from the player2Array
@@ -184,14 +186,8 @@ const displayCards = () => {
         $('<h2>').text(player2Array[j].face).addClass('hidden').appendTo($div);
         $('<h2>').text(player2Array[j].suit).addClass('hidden').appendTo($div);
     }
+    $player1Div.children().on('click', player1ToCrib);
 }
-
-// // FIND SPECFIC CARD WITHIN ARRAY BASED ON PARAMETERS // 
-// const findObject = player1Array.find((object, faceValue, suitValue) => {
-//     if (object.suit === suitValue && object.face === faceValue) {
-//         return player1Array.indexOf(object);
-//     }
-// });
 
 // CHECK FOR COMPUTER GO //
 // checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
@@ -210,54 +206,61 @@ const startGame = () => {
     // EXTRA ADD: dealing the cards to the players using animation
     // Player 1 cards are face-up; Player 2 either disappear or face-down
     displayCards();
-    // run crib()
-    crib(player1Array, player2Array);
-    // run gameplay() in crib function
+    // $player1Cards.on('click', player1ToCrib);
 }
 
-// PUT CARDS IN CRIB //
-const crib = (arr1, arr2) => {
-    //////// EXTRA ADD > Drag & Drop into Crib ///////
-    // For player 1 (human) - click 2 of the cards, on click event, run function
-    $player1Div.children().on('click', () => {
-        if (cribArray.length < 2) {
-                    // pull value of face & store in variable
-        let faceValue = $(event.currentTarget).children().eq(0).val();
-        // pull value of suit & store in variable
-        let suitValue = $(event.currentTarget).children().eq(1).val();
-        // create new card object from value to store in crib 
-        const newCard = new Deck(suitValue, faceValue);
-        // push to crib array
-        cribArray.push(newCard);
-        // find the object in the player1Array that matches the values of the currentTarget DOM element
-        const findObject = player1Array.find((object) => {
-            // use above local variables 
-            if (object.suit === suitValue && object.face === faceValue) {
-                return object;
-            }
-        });
-        let currentIndex = arr1.indexOf(findObject);
-        // remove from array
-        arr1.splice(`${currentIndex}`, 1);
-        // remove from DOM
-        $(event.currentTarget).remove();  
-        } else if (cribArray.length === 2) {
-            for (let i = 0; i < 2; i++) {
-                let num = Math.floor(Math.random()*arr2.length);
-                cribArray.push(arr2[num]);
-                // removes cards from player 2 array & from the DOM
-                arr2.splice(num, 1);
-                $player2Div.children().eq(5).remove();
-            }
-            $cribButton.on('click', gameplay(player1Array, player2Array));
+// PUT CARDS IN CRIB FUNCTIONS //
+
+// listen for click event, then run function player1ToArray
+const player1ToCrib = () => {
+    let faceValue = $(event.currentTarget).children().eq(0).val();
+    // pull value of suit & store in variable
+    let suitValue = $(event.currentTarget).children().eq(1).val();
+    // find the object in the player1Array that matches the values of the currentTarget DOM element
+    const findObject = player1Array.find((object) => {
+        // use above local variables 
+        if (object.suit === suitValue && object.face === faceValue) {
+            return object;
         }
-    });   
-}
+    });
+    let currentIndex = player1Array.indexOf(findObject);
+    // add to cribArray
+    cribArray.push(player1Array[currentIndex]);
+    // remove from array
+    player1Array.splice(`${currentIndex}`, 1);
+    // remove from DOM
+    $(event.currentTarget).remove(); 
+    // call computerArrayToCrib function
+    defineCallback();
+};
+
+// check to see if player1 has chosen 2 cards to put into crib
+const defineCallback = () => {
+    if (cribArray.length >= 2) {
+        return moveComputerCardstoCrib();
+    } else {
+        return () => {}
+    }
+};
+
+const moveComputerCardstoCrib = () => {
+    for (let i = 0; i < 2; i++) {
+        let num = Math.floor(Math.random()*player2Array.length);
+        cribArray.push(player2Array[num]);
+        // removes cards from player 2 array & from the DOM
+        player2Array.splice(num, 1);
+        $player2Div.children().eq(5).remove();
+    }
+    gameplay(player1Array, player2Array, cribArray);
+};
+
 
 // GAMEPLAY //
-const gameplay = (arr1, arr2) => {
+const gameplay = (player1Arr, player2Arr, cribArr) => {
     // non-dealer goes first
-    console.log(cribArray);
+    console.log(player1Arr);
+    console.log(player2Arr);
+    console.log(cribArr);
     // If player 1 equals non-dealer
     if (dealer !== "player1") {
         // Then while the gameplayArray.length < 8

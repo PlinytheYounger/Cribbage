@@ -1,5 +1,3 @@
-console.log('hello');
-
 /////PSUEDOCODE/////
 
 
@@ -138,29 +136,8 @@ $(() => {
     const $player1Div = $('#player1');
     // 11. Player 2
     const $player2Div = $('#player2');
-    
-// //function to shuffle the cards
-// const shuffleCards = (array) => {
-//     let m = array.length, t, i;
-//     //While there are still elements to shuffle continue shuffling
-//     while (m) {
-//         //Pick a random remaining element that has not been selected
-//         i = Math.floor(Math.random()*m--);
-//         //swap with current element
-//         t = array[m];
-//         array[m] = array[i];
-//         array[i] = t;
-//     }
-//     return array;
-// }
-
-// const newDeck = new Deck('clubs','ace',11);
-// newDeck.generateCards();
-// // console.log(newDeck);
-
-// shuffleCards(newDeck);
-// console.log(newDeck)
-
+    // 12. Crib Button
+    const $cribButton = $('#cribButton');
 
 ///// FUNCTIONS /////
 // randomComputerCard() = function to generate a random card from the player2Array
@@ -168,7 +145,6 @@ $(() => {
 // CHOOSE DEALER//
 const chooseDealer = () => {
     let num = Math.ceil(Math.random()*2);
-    console.log(num);
     if (num === 1) {
         return dealer = "player1"; 
     } else if (num === 2) {
@@ -182,10 +158,10 @@ const dealCards = () => {
     for (let i = 0; i < 6; i++) {
         // generate random number no greater than length of deckArray
         let number  = Math.floor(Math.random()*deckArray.length);
-        // check to make sure no duplicates push to playerArray
-        player1Array.push(deckArray[number]);
         // splice from deckArray
         deckArray.splice(number, 1);
+        // check to make sure no duplicates push to playerArray
+        player1Array.push(deckArray[number]);
     }
     console.log(player1Array);
     for (let i = 0; i < 6; i++) {
@@ -210,6 +186,13 @@ const displayCards = () => {
     }
 }
 
+// // FIND SPECFIC CARD WITHIN ARRAY BASED ON PARAMETERS // 
+// const findObject = player1Array.find((object, faceValue, suitValue) => {
+//     if (object.suit === suitValue && object.face === faceValue) {
+//         return player1Array.indexOf(object);
+//     }
+// });
+
 // CHECK FOR COMPUTER GO //
 // checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
     // >> iterate through array
@@ -219,6 +202,9 @@ const displayCards = () => {
 // startGame() = when player clicks 'startGame' run startGame function
 const startGame = () => {
     // EXTRA ADD: shuffle the deck using animation
+    // Randomly choose "dealer"
+    chooseDealer();
+    console.log(dealer);
     // assign each player gameplay array 6 random cards from the deckArray
     dealCards();
     // EXTRA ADD: dealing the cards to the players using animation
@@ -231,67 +217,73 @@ const startGame = () => {
 
 // PUT CARDS IN CRIB //
 const crib = (arr1, arr2) => {
-    // add 2 cards randomly for player 2 array
-    for (let i = 0; i < 2; i++) {
-        let num = Math.floor(Math.random()*arr2.length);
-        cribArray.push(arr2[num]);
-        // removes cards from player 2 array & from the DOM
-        arr2.splice(num, 1);
-        $player2Div.children().eq(5).remove();
-    }
+    //////// EXTRA ADD > Drag & Drop into Crib ///////
     // For player 1 (human) - click 2 of the cards, on click event, run function
     $player1Div.children().on('click', () => {
-        // pull value of face & store in variable
+        if (cribArray.length < 2) {
+                    // pull value of face & store in variable
         let faceValue = $(event.currentTarget).children().eq(0).val();
         // pull value of suit & store in variable
         let suitValue = $(event.currentTarget).children().eq(1).val();
         // create new card object from value to store in crib 
         const newCard = new Deck(suitValue, faceValue);
-        // find index of currentTarget to splice/remove it from playerArray
-        console.log(arr1.indexOf(`${$(event.currentTarget).children().val()}`));
         // push to crib array
         cribArray.push(newCard);
-        // remove from player1Array
-        $(event.currentTarget).remove();
-        //////// EXTRA ADD > Drag & Drop into Crib
-        // When the length of the crib array is equal to 4, then move to gameplay
-        if (cribArray.length >= 4) {
-            gameplay();
+        // find the object in the player1Array that matches the values of the currentTarget DOM element
+        const findObject = player1Array.find((object) => {
+            // use above local variables 
+            if (object.suit === suitValue && object.face === faceValue) {
+                return object;
+            }
+        });
+        let currentIndex = arr1.indexOf(findObject);
+        // remove from array
+        arr1.splice(`${currentIndex}`, 1);
+        // remove from DOM
+        $(event.currentTarget).remove();  
+        } else if (cribArray.length === 2) {
+            for (let i = 0; i < 2; i++) {
+                let num = Math.floor(Math.random()*arr2.length);
+                cribArray.push(arr2[num]);
+                // removes cards from player 2 array & from the DOM
+                arr2.splice(num, 1);
+                $player2Div.children().eq(5).remove();
+            }
+            $cribButton.on('click', gameplay(player1Array, player2Array));
         }
-    })
+    });   
 }
 
 // GAMEPLAY //
-const gameplay = () => {
-    // Randomly choose "dealer"
-    chooseDealer();
-    console.log(dealer);
-    console.log(player1Array);
+const gameplay = (arr1, arr2) => {
     // non-dealer goes first
+    console.log(cribArray);
     // If player 1 equals non-dealer
     if (dealer !== "player1") {
         // Then while the gameplayArray.length < 8
-        while (gameplayArray.length < 8) {
+        if (gameplayArray.length < 8) {
             // >> Player 1 (human) gets to drag & drop into the Gameplay Cards pile (face-up)
             $player1Div.children().on('click', () => {
-                // >> checkForGameplayPoints()
-                console.log($(event.currentTarget));
                 // pull value of face & store in variable
                 let faceValue = $(event.currentTarget).children().eq(0).val();
                 // pull value of suit & store in variable
                 let suitValue = $(event.currentTarget).children().eq(1).val();
                 // create new card object from value to store in crib 
                 const newCard = new Deck(suitValue, faceValue);
+                // push to crib array
                 gameplayArray.push(newCard);
-                $(event.currentTarget).remove();
+                console.log(gameplayArray);
+                // checkForGameplayPoints();
+            });
+        }
+                // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
                 // >> checkForComputerGo()
             // >> then run randomComputerCard() function
                 // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
-            })
-        }
     }
+};
 
     // Else if player 2 equals non-dealer
         // Then while the length of gameplayArray < 8  
@@ -305,7 +297,6 @@ const gameplay = () => {
 
 
     // >> Run the "checkForPoints" function to check to see if there are any gameplay points
-}
 
 // checkForGameplayPoints()
     // if the card placed makes the gameplayCounter total equal 15

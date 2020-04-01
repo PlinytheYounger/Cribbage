@@ -169,8 +169,9 @@ console.log(myDeck.cards)
     const $player2Div = $('#player2');
     // 12. Crib Button
     const $cribButton = $('#cribButton');
-    // // 13. Player 1 cards
-    // const $player1Cards = $('.hand');
+    // // 13. gameplay Div
+    const $gameplayCards = $('#gameplayCards');
+    
 
 ///// FUNCTIONS /////
 // randomComputerCard() = function to generate a random card from the player2Array
@@ -185,7 +186,11 @@ const chooseDealer = () => {
     }
 }
 
-// PICK RANDOM CARDS FOR PLAYER ARRAYS ("DEAL") //
+//=====================
+// dealCards()
+// Runs upon click of 'Start Game' button / running startGame() 
+// deals 6 cards to each player
+//=====================
 const dealCards = () => {
     // dealing 6 cards
     for (let i = 0; i < 12; i++) {
@@ -220,7 +225,12 @@ const dealCards = () => {
     // >> iterate through array
         // >> if 
 
-// START GAME //
+//=====================
+// startGame()
+// Runs upon click of 'Start Game' button.  
+// Chooses a 'dealer' & deals 6 cards to each player
+//=====================
+
 // startGame() = when player clicks 'startGame' run startGame function
 const startGame = () => {
     // EXTRA ADD: shuffle the deck using animation
@@ -233,17 +243,19 @@ const startGame = () => {
     // $player1Cards.on('click', player1ToCrib);
 }
 
-// PUT CARDS IN CRIB FUNCTIONS //
+//=====================
+// player1ToCrib(); defineCallback(); moveComputerCardstoCrib()
+// Runs upon click of one of cards in the player 1 Div; checks to see if player1 has placed 2 cards in the cribArray
+// Once you have picked 2 cards to put into the crib, picks 2 random cards from the player2Array to add to crib and runs gameplay function to start the game
+//=====================
 
 // listen for click event, then run function player1ToArray
 const player1ToCrib = () => {
     // pull name value from DOM element that has been clicked
-    let nameValue = $(event.currentTarget);
-    console.log(nameValue);
+    let nameValue = $(event.currentTarget).text();
     const findObject = player1Array.find((object) => {
         // use above local variables 
-        if (object === nameValue) {
-            console.log(object);
+        if (object.name === nameValue) {
             return object;
         } else {
             return ()=> {
@@ -253,7 +265,6 @@ const player1ToCrib = () => {
     });
     // find the object in the player1Array that matches the values of the currentTarget DOM element
     let currentIndex = player1Array.indexOf(findObject);
-    console.log(currentIndex);
     // add to cribArray
     cribArray.push(findObject);
     // remove from array
@@ -289,10 +300,12 @@ const moveComputerCardstoCrib = () => {
 };
 
 
-// function to pick random card from computer array
+// function to pick random card from computer array to add to gameplay array & show
 const randomComputerCard = () => {
     let num = Math.floor(Math.random()*player2Array.length);
-    gameplayArray.push(player2Array[randCard]);
+    gameplayArray.push(player2Array[num]);
+    const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
+    $('<h2>').text(player2Array[num].name).appendTo($div);
     player2Array.splice(num, 1);
     $player2Div.children().eq(5).remove();
     console.log(gameplayArray);
@@ -311,52 +324,77 @@ const gameplay = (player1Arr, player2Arr, cribArr) => {
         if (gameplayArray.length < 8 && cribArray.length === 4) {
             // >> Player 1 (human) gets to drag & drop into the Gameplay Cards pile (face-up)
             $player1Div.children().on('click', () => {
-                // pull value of face & store in variable
-                let faceValue = $(event.currentTarget).children().eq(0).val();
-                // pull value of suit & store in variable
-                let suitValue = $(event.currentTarget).children().eq(1).val();
-                // create new card object from value to store in crib 
-                const newCard = new Deck(suitValue, faceValue);
-                // push to crib array
-                gameplayArray.push(newCard);
-                console.log(gameplayArray);
+                let nameValue = $(event.currentTarget).text();
+                const findObject = player1Array.find((object) => {
+                    // use above local variables 
+                    if (object.name === nameValue) {
+                        console.log(object);
+                        return object;
+                    } else {
+                        return ()=> {
+
+                        }
+                    }
+                });
+                // find the object in the player1Array that matches the values of the currentTarget DOM element
+                let currentIndex = player1Array.indexOf(findObject);
+                // add to cribArray
+                cribArray.push(findObject);
+                const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
+                $('<h2>').text(player2Array[num].name).appendTo($div);
+                // remove from array
+                player1Array.splice(`${currentIndex}`, 1);
+                // remove from DOM
+                $(event.currentTarget).remove(); 
                 // checkForGameplayPoints();
-            });
-        }
-                // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
                 // >> checkForComputerGo()
-            // >> then run randomComputerCard() function
+                // >> then run randomComputerCard() function
+                randomComputerCard();
                 // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
-    
-                // Else if player 2 equals non-dealer
-    } else if (dealer === "player1") {
+        });
+    }
+    // Else if player 2 equals non-dealer
+    } else if (dealer === "player2") {
         // Then while the length of gameplayArray < 8  
         if (gameplayArray.length < 8 && cribArray.length === 4) {
             // >> checkForComputerGo()
             // >> run randomComputerCard()
             randomComputerCard();
-                // pick random card & add it to gameplay cards
-                let ranCard = Math.floor(Math.random()*player2Array.length)
                 // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
             // >> then human gets to choose a card
-                // >> checkForGameplayPoints()
-                // >> checkForRoundPoints()
-            }
-        }
-};
+            $player1Div.children().on('click', () => {
+                // pull name value from DOM element that has been clicked
+                let nameValue = $(event.currentTarget).text();
+                const findObject = player1Array.find((object) => {
+                    // use above local variables 
+                    if (object.name === nameValue) {
+                        console.log(object);
+                        return object;
+                    } else {
+                        return ()=> {
 
-    // Else if player 2 equals non-dealer
-        // Then while the length of gameplayArray < 8  
-            // >> checkForComputerGo()
-            // >> run randomComputerCard()
+                        }
+                    }
+                });
+                // find the object in the player1Array that matches the values of the currentTarget DOM element
+                let currentIndex = player1Array.indexOf(findObject);
+                // add to cribArray
+                cribArray.push(findObject);
+                // remove from array
+                player1Array.splice(`${currentIndex}`, 1);
+                // remove from DOM
+                $(event.currentTarget).remove(); 
+                randomComputerCard();
+            });
+                // checkForGameplayPoints();
                 // >> checkForGameplayPoints()
                 // >> checkForRoundPoints()
-            // >> then human gets to choose a card
-                // >> checkForGameplayPoints()
-                // >> checkForRoundPoints()
+        }
+    }
+};
 
 // checkForGameplayPoints()
     // if the card placed makes the gameplayCounter total equal 15

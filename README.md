@@ -8,6 +8,8 @@ Cribbage is a classic (usually 2-player, but possibly more) card game that invol
 
 This game was and is a staple in my house growing up, it is fairly simple in theory, but involves many subtleties, strategy and gambling to score the maximum amount of points each round. 
 
+[The Game](https://plinytheyounger.github.io/Cribbage2.0/)
+
 ### How to Play
 
 1. To start, players cut the deck and highest card drawn becomes the first dealer. After each round, the dealer switches.

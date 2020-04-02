@@ -47,7 +47,7 @@ Me
 
 ## Wireframe
 
-[wireframe]:wireframe/Desktop_Cribbage.png
+![wireframe](wireframe/Desktop_Cribbage.png)
 
 ## Challenges:
 - Using event listeners and handlers to find elements of various arrays

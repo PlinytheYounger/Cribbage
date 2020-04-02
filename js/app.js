@@ -273,11 +273,13 @@ const moveComputerCardstoCrib = () => {
 const gameplay = () => {
     if (playerCounter % 2 !== 0) {
         $player1Div.children('.hand').on('click', player1);
+        endOfHand();
         console.log(playerCounter);
         // check for end of hand
         // check for end of round
     } else if (playerCounter % 2 === 0) {
         console.log(playerCounter);
+        endOfHand();
         player2();
         // check for end of hand
         // check for end of round
@@ -342,37 +344,24 @@ const player2 = () => {
 // // endOfHand() function - if gameplayCounter === 31 or both players "go"
 const endOfHand = () => {
     console.log('end of hand');
-    // if (gameplayCounter === 31 && gameplayArray.length < 8) {
+    if (gameplayCounter >= 29 && gameplayArray.length < 8) {
         console.log('go again!');
         gameplayCounter = 0;
         playerCounter = 1;
         $gameplayCards.children('.hand').remove();
         gameplay();
-    // }
+    }
 }
 
-// // // playerGo() //
+// playerGo() //
 $('.go').on('click', endOfHand);
 
-// const endOfHand = () => {
-//     if (gameplayCounter === 31 && gameplayArray.length < 8) {
-//         console.log('Hiya!');
-//         gameplayCounter = 0;
-//         $gameplayCards.children('.hand').remove();
-//         gameplay();
-//     } else if (gameplayArray.length === 8) {
-//         endOfRound();
-//     }
-// }
-
-// // endOfRound() function - check to see if length of gameplayArray is 8
-// const endOfRound = () => {
-//     if (gameplayArray.length === 8) {
-//         checkForRoundPoints();
-//     } else {
-//         gameplay();
-//     }
-// }
+// endOfRound() function - check to see if length of gameplayArray is 8
+const endOfRound = () => {
+    if (gameplayArray.length === 8) {
+        console.log('Round is over!');
+    } else () => {}
+}
 //     // if it is - then run checkForRoundPoints()
 //     // else return empty function
 

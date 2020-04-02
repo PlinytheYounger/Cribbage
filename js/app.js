@@ -339,13 +339,21 @@ const player2 = () => {
     gameplay();  
 }
 
+// // endOfHand() function - if gameplayCounter === 31 or both players "go"
+const endOfHand = () => {
+    console.log('end of hand');
+    // if (gameplayCounter === 31 && gameplayArray.length < 8) {
+        console.log('go again!');
+        gameplayCounter = 0;
+        playerCounter = 1;
+        $gameplayCards.children('.hand').remove();
+        gameplay();
+    // }
+}
+
 // // // playerGo() //
 $('.go').on('click', endOfHand);
 
-// // endOfHand() function - if gameplayCounter === 31 or both players "go"
-const endOfHand = () => {
-    
-}
 // const endOfHand = () => {
 //     if (gameplayCounter === 31 && gameplayArray.length < 8) {
 //         console.log('Hiya!');

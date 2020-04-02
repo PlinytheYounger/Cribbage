@@ -56,3 +56,4 @@ Me
 ## Further Developments
 - Building a cribbage board in JS
 - Adding additional animations to see scoring more visually
+- Building out game logic further to incorporate all nuances / rules and further levels of difficulty

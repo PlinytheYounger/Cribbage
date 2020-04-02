@@ -19,6 +19,7 @@ body {
     box-sizing: border-box;
     font-size: 14px;
     background-color: #EDECEA;
+    color: #464545;
 }
 
 h1 {
@@ -62,6 +63,18 @@ main {
     margin-right: 5px;
     font-size: 1.5em;
 }
+
+a {
+    text-decoration: none;
+    color: #464545;
+}
+
+a:hover {
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
 
 #startGame {
     padding: 10px;
@@ -131,6 +144,33 @@ section {
 }
 
 /*/////// FOOTER DIV ////////*/
+
+/*/////////////////////////////////*/
+/*/////// HOW TO PLAY PAGE ////////*/
+/*/////////////////////////////////*/
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+
+main {
+    width: 75%;
+    line-height: 2.5em;
+}
+
+p, ul {
+    padding: 20px;
+    background-color: #C6DFD6;
+    border: 1px solid #464545;
+    border-radius: 5px;
+}
+
+p, li {
+    font-size: 1.5em;
+}
 
 
 

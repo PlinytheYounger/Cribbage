@@ -74,6 +74,10 @@ main {
     text-align: center;
 }
 
+.hide {
+    display: none;
+}
+
 main > .card {
     width: 20%;
 }

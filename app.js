@@ -77,10 +77,20 @@ let totalPointsPlayer1;
 let totalPointsPlayer2;
 
 // gameplayCounter = keeps track of the total of the cards in the gameplayArray for us in checkForPoints() function >> meaning have we reached 31 for the round? 
-let gameplayCounter;
+let gameplayCounter = 0;
 
 // dealer = used to toggle between players (i.e. whoever is dealer gets the crib, whoever isn't starts play & donates to the crib)
 let dealer;
+
+// player array copies
+let pointsArray1;
+let pointsArray2;
+
+// player2 Go to keep track of "gos"
+let player2Go = false;
+
+// player counter
+let playerCounter = 1;
 
 // generate a deck of card objects & store it in an array > this will be the deck
     // each card object will contain:
@@ -144,7 +154,7 @@ class Deck {
 
 const myDeck = new Deck();
 myDeck.generateDeck(store);
-console.log(myDeck.cards)
+console.log(myDeck.cards);
 
 // CACHED DOM ELEMENTS:
     // 1. Settings Modal Button
@@ -177,16 +187,17 @@ console.log(myDeck.cards)
     
 
 ///// FUNCTIONS /////
-// randomComputerCard() = function to generate a random card from the player2Array
 
 // CHOOSE DEALER//
 const chooseDealer = () => {
     let num = Math.ceil(Math.random()*2);
     if (num === 1) {
         alert(`Player 1 is the dealer, Player 2 will play first after the crib is populated.`)
+        $('#crib').children('h2').children().text(`Player 1's `)
         return dealer = "player1"; 
     } else if (num === 2) {
         alert(`Player 2 is the dealer, Player 1 will play first after the crib is populated.`)
+        $('#crib').children('h2').children().text(`Player 2's `)
         return dealer = "player2";
     }
 }
@@ -196,6 +207,7 @@ const chooseDealer = () => {
 // Runs upon click of 'Start Game' button / running startGame() 
 // deals 6 cards to each player
 //=====================
+
 const dealCards = () => {
     // dealing 6 cards
     for (let i = 0; i < 13; i++) {
@@ -223,10 +235,6 @@ const dealCards = () => {
             myDeck.cards.splice(number, 1);
         } 
     }
-    console.log(player1Array);
-    console.log(player2Array);
-    // run crib function on click
-    $player1Div.children('.hand').on('click', player1ToCrib);
 }
 
 //=====================
@@ -240,10 +248,10 @@ const startGame = () => {
     // EXTRA ADD: shuffle the deck using animation
     // Randomly choose "dealer"
     chooseDealer();
-    console.log(dealer);
     // assign each player gameplay array 6 random cards from the deckArray & display for player 1
     dealCards();
     // EXTRA ADD: dealing the cards to the players using animation
+    $player1Div.children('.hand').on('click', player1ToCrib);
 }
 
 //=====================
@@ -255,32 +263,29 @@ const startGame = () => {
 
 // listen for click event, then run function player1ToArray
 const player1ToCrib = (event) => {
-    // find the object in the player1Array that matches the values of the currentTarget DOM element
-    const name = (element) => {
-        return element.name === `${$(event.target).text()}`;
-    }
-    
-    let currentIndex = player1Array.findIndex(name);
-    // add to cribArray
-    cribArray.push(player1Array[currentIndex]);
-    // add element to cribDiv
-    const $div = $('<div>').addClass('hand').appendTo($('#crib'));
-    $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
-    // remove from array
-    player1Array.splice(`${currentIndex}`, 1);
-    // remove from DOM
-    $(event.currentTarget).remove(); 
-    // call defineCallback to check that human added 2 cards to crib
-    defineCallback();
+        // find the object in the player1Array that matches the values of the currentTarget DOM element
+        const name = (element) => {
+            return element.name === `${$(event.target).text()}`;
+        }
+        
+        let currentIndex = player1Array.findIndex(name);
+        // add to cribArray
+        cribArray.push(player1Array[currentIndex]);
+        // add element to cribDiv
+        const $div = $('<div>').addClass('hand').appendTo($('#crib'));
+        $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        // remove from array
+        player1Array.splice(`${currentIndex}`, 1);
+        // remove from DOM
+        $(event.currentTarget).remove(); 
+        // call defineCallback to check that human added 2 cards to crib
+        defineCallback();
 };
 
 // check to see if player1 has chosen 2 cards to put into crib
 const defineCallback = () => {
     if (cribArray.length === 2) {
         return moveComputerCardstoCrib();
-    } else if (cribArray.length === 4) {
-        gameplay(player1Array, player2Array, cribArray);
-        console.log('test');
     } else {
         return () => {}
     }
@@ -297,135 +302,157 @@ const moveComputerCardstoCrib = () => {
         const $div = $('<div>').addClass('hand').appendTo($('#crib'));
         $('<h2>').text(myDeck.cards[num].name).addClass('hidden').appendTo($div);
     }
-    gameplay(player1Array, player2Array, cribArray);
+    if (cribArray.length === 4) {
+        $player1Div.children('.hand').off();
+        pointsArray1 = [...player1Array];
+        pointsArray2 = [...player2Array];
+        console.log(pointsArray1);        
+        console.log(player1Array);
+        console.log(pointsArray2);
+        console.log(player2Array);
+        gameplay();
+    }
 };
 
 //=====================
 // GAMEPLAY FUNCTIONS
-// gameplay() starts the actual game - non-dealer goes first; alternates between the non-dealer & dealer until someone says 'go' or they come to the end of their hands
-// randomComputerCard plays a random card from the dea
+// gameplay()
+// player2Deal()
+// player1Deal()
+// checkForGo()
+// checkForGameplayPoints()
+// randomComputerCard()
 //=====================
 
-// GAMEPLAY //
-const gameplay = (player1Arr, player2Arr, cribArr) => {
-    // non-dealer goes first
-    console.log(player1Arr);
-    console.log(player2Arr);
-    console.log(cribArr);
-    // If player 1 equals non-dealer
-    if (dealer === "player2") {
-        $player1Div.children('.hand').on('click', () => {
-            // find the object in the player1Array that matches the values of the currentTarget DOM element
-            const name = (element) => {
-                return element.name === `${$(event.target).text()}`;
-            }
-            let currentIndex = player1Array.findIndex(name);
-            // add to cribArray
-            gameplayArray.push(player1Array[currentIndex]);
-            // add element to cribDiv
-            const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
-            $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
-            // remove from array
-            player1Array.splice(`${currentIndex}`, 1);
-            // remove from DOM
-            $(event.currentTarget).remove(); 
-            gameplayCounter += player1Array[currentIndex].val;
-            console.log(gameplayCounter);
-            // removeFromPlayer1(currentIndex);
-            // checkForGameplayPoints();
-            // >> checkForRoundPoints()
-            // check function
-            gameplayCallback(event.target,currentIndex);
-            // >> checkForComputerGo()
-            
-            // >> checkForGameplayPoints()
-            // >> checkForRoundPoints()
-        });
-    // Else if player 2 equals non-dealer
-    } else if (dealer === "player1") {
-        // >> checkForComputerGo()
-        // >> run randomComputerCard()
-        randomComputerCard();
-            // >> checkForGameplayPoints()
-            // >> checkForRoundPoints()
-        // >> then human gets to choose a card
-        $player1Div.children().on('click', () => {
-            let nameValue = $(event.currentTarget).text();
-            const findObject = player1Array.find((object) => {
-                // use above local variables 
-                if (object.name === nameValue) {
-                    console.log(object);
-                    return object;
+// gameplay() function that starts the actual gameplay //
+const gameplay = () => {
+    console.log(gameplayCounter);
+    // if player2 is dealer:
+    if (dealer === "player1") {
+        // run player1Deal() function
+        if (playerCounter % 2 !== 0) {
+            const num = (element) => {
+                if (element.val <= (31 - gameplayCounter)) {
+                    return element.name;
                 } else {
-                    return ()=> {
-
-                    }
+                    playerCounter+=1;
+                    endOfHand();
+                    gameplay();  
                 }
-            });
-            // find the object in the player1Array that matches the values of the currentTarget DOM element
-            let currentIndex = player1Array.indexOf(findObject);
-            console.log(currentIndex);
-            // add to cribArray
-            gameplayArray.push(player1Array[currentIndex]);
-            gameplayCounter += (player1Array[0].val);
-            console.log(gameplayCounter);
-            const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
-            $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
-            removeFromPlayer1(currentIndex);
-            // checkForGameplayPoints();
-            // >> checkForRoundPoints()
-            // check function
-            gameplayCallback(event.target,currentIndex);
-        });
-            // checkForGameplayPoints();
-            // >> checkForGameplayPoints()
-            // >> checkForRoundPoints()
-    }
-};
-
-const gameplayCallback = () => {
-    if (gameplayArray.length < 8 && cribArray.length === 4) {
-        for (let i = 0; i < player2Array.length; i++) {
-            if ((31 - gameplayCounter) >= player2Array[i].val) {
-                randomComputerCard();
-            } else if ((31 - gameplayCounter) <= player2Array[i].val) {
-                computerGo();
             }
-        } 
-    } else if (gameplayArray.length === 8) {
-        // checkForRoundPoints();
+            let currentIndex = player2Array.findIndex(num); 
+            player2(currentIndex);
+        } else {
+            $player1Div.children('.hand').on('click', player1);
+        }
+    } // else if player1 is dealer:
+    else if (dealer === "player2") {
+        // if playerCounter is even, player2's turn
+        if (playerCounter % 2 !== 0) {
+            $player1Div.children('.hand').on('click', player1);
+        } else {
+            for (let i = 0; i < player2Array.length; i++) {
+                if (player2Array[i].val <= (31 - gameplayCounter)) {
+                    player2(i);
+                } else if (player2Array[i].val >= (31 - gameplayCounter)) {
+                    playerCounter+=1;
+                    endOfHand();
+                    gameplay();            
+                }
+            }
+        }
     }
 }
 
-// function to pick random card from computer array to add to gameplay array & show
-const randomComputerCard = () => {
-    let num = Math.floor(Math.random()*player2Array.length);
-    ////// ADD IF STATEMENT > only push card whose value is less than (31 - gameplayCounter)
-    gameplayArray.push(player2Array[num]);
+// player2Deal() - when player2 is dealer (player1 goes first) //
+const player1 = (event) => {
+    // 'on, click' > take current object, findIndex using the object and push element to gameplay array
+        // find the object in the player1Array that matches the values of the currentTarget DOM element
+        const name = (element) => {
+            if (element.name === `${$(event.target).text()}`) {
+                return element.name;
+            } 
+        }
+        let currentIndex = player1Array.findIndex(name);
+        // add to gameplayArray
+        gameplayArray.push(player1Array[currentIndex]);
+        // add value to gameplayCounter
+        let num = player1Array[currentIndex].val;
+        gameplayCounter += num;
+        $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
+        // add element to gameplayCards Div
+        const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
+        $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        // remove from array
+        player1Array.splice(`${currentIndex}`, 1);
+        // remove from DOM
+        $(event.currentTarget).remove(); 
+        // add +1 to playerCounter
+        playerCounter++;
+        // // checkForGameplayPoints() function
+        // checkForGameplayPoints();
+        // // end of Hand
+        // endOfHand();
+        // // check for end of Round
+        // endOfRound();
+        $('.go').on('click', gameplay);
+        endOfHand();
+        gameplay();
+}
+
+// player1Deal() - when player1 is dealer (player2 goes first) //
+const player2 = (index) => {
+    // add to gameplayArray
+    gameplayArray.push(player2Array[index]);
+
+    let num = player2Array[index].val;
+    gameplayCounter += num;
+    $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
+    // add element to gameplayCards Div
     const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
-    $('<h2>').text(player2Array[num].name).appendTo($div);
-    console.log(gameplayArray);
-    removeFromPlayer2(num)
-}
-
-const removeFromPlayer1 = (event,index) => {
+    $('<h2>').text(player2Array[index].name).appendTo($div);
     // remove from array
-    player1Array.splice(`${index}`, 1);
+    player2Array.splice(`${index}`, 1);
     // remove from DOM
-    $(event.currentTarget).remove(); 
-};
-
-const removeFromPlayer2 = (index) => {
-    player2Array.splice(index, 1);
     $player2Div.children().eq(5).remove();
+    // add +1 to playerCounter
+    playerCounter++;
+    
+    // checkForGameplayPoints();
+    endOfHand();
+    // endOfRound();
+    $player1Div.children('.hand').on('click', player1);
 }
 
-// CHECK FOR COMPUTER GO //
-// checkForComputerGo() = function to check whether player2Array cards values are each greater than the # of points left to 31 in the gamePlayArrray
-    // >> iterate through array
-        // >> if 
+// // playerGo() //
 
-// checkForGameplayPoints()
+// endOfHand() function - if gameplayCounter === 31 or both players "go"
+const endOfHand = () => {
+    if (gameplayCounter === 31 && gameplayArray.length < 8) {
+        console.log('Hiya!');
+        gameplayCounter = 0;
+        $gameplayCards.children('.hand').remove();
+        gameplay();
+    } else if (gameplayArray.length === 8) {
+        endOfRound();
+    }
+}
+
+// // endOfRound() function - check to see if length of gameplayArray is 8
+// const endOfRound = () => {
+//     if (gameplayArray.length === 8) {
+//         checkForRoundPoints();
+//     } else {
+//         gameplay();
+//     }
+// }
+//     // if it is - then run checkForRoundPoints()
+//     // else return empty function
+
+// // checkForGameplayPoints()
+// const checkForGameplayPoints = () => {
+//     console.log('points');
+//     gameplay();
     // if the card placed makes the gameplayCounter total equal 15
         // >> current player gets +2 totalPoints
         // >> peg moves 2 holes
@@ -447,6 +474,9 @@ const removeFromPlayer2 = (index) => {
         // >> add # of cards in run to totalPoints
         // >> return
     // reset this value every time it gets to 31 // or every time someone presses "go" [Need to figure out how to reset when someone presses go, while still counting points > add 1 to other player & reset?]
+// }
+
+// randomComputerCard() //
 
 // checkForRoundPoints() = function to check whether the gameplayArray equals 8 and to add up end-of-game points
     // If gameplayArray.length === 8 then end round & count points

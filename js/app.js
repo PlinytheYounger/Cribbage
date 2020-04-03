@@ -134,20 +134,6 @@ $(() => {
 
 ///// FUNCTIONS /////
 
-// CHOOSE DEALER//
-// const chooseDealer = () => {
-//     let num = Math.ceil(Math.random()*2);
-//     if (num === 1) {
-//         alert(`Player 1 is the dealer, Player 2 will play first after the crib is populated.`)
-//         $('#crib').children('h2').children().text(`Player 1's `)
-//         return dealer = "player1"; 
-//     } else if (num === 2) {
-//         alert(`Player 2 is the dealer, Player 1 will play first after the crib is populated.`)
-//         $('#crib').children('h2').children().text(`Player 2's `)
-//         return dealer = "player2";
-//     }
-// }
-
 //=====================
 // dealCards()
 // Runs upon click of 'Start Game' button / running startGame() 
@@ -266,11 +252,10 @@ const moveComputerCardstoCrib = () => {
 //=====================
 // GAMEPLAY FUNCTIONS
 // gameplay()
-// player2Deal()
-// player1Deal()
-// checkForGo()
-// checkForGameplayPoints()
-// randomComputerCard()
+// player1()
+// player2()
+// endOfHand()
+// endOfRound()
 //=====================
 
 const gameplay = () => {
@@ -343,14 +328,31 @@ const endOfHand = () => {
     }
 }
 
+//=====================
+// END OF ROUND / GAME POINTS FUNCTIONS
+// endOfRound()
+// addCards()
+// checkForPair()
+// checkForFifteen()
+// nextRound()
+// nextDealer()
+// resetDOM()
+// newRound()
+//=====================
+
 // endOfRound() function - check to see if length of gameplayArray is 8
 const endOfRound = () => {
     addCards();
     checkForPair(pointsArray1);
     checkForPair(pointsArray2);
     checkForPair(cribArray);
+    // checkForFifteen(pointsArray1);
+    // checkForFifteen(pointsArray2);
+    // checkForFifteen(cribArray);
     gameplayCounter = 0;
+    $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
     alert(`Player 1 Score: ${totalPointsPlayer1}! Player 2 Score: ${totalPointsPlayer2}!`);
+    declareWinner();
     nextRound();
 }
 
@@ -376,12 +378,11 @@ const addCards = () => {
 
 // check for pairs in each array
 const checkForPair = (array) => {
-    let newArray = [...array];
-    newArray.push(starterCard[0]);
+    array.push(starterCard[0]);
     const values = (object) => {
         return object.face;
     }
-    let faceArray = newArray.map(values);
+    let faceArray = array.map(values);
     // create empty object
     let faceFrequency = {}
     // loop through array
@@ -394,14 +395,48 @@ const checkForPair = (array) => {
     });
 
     for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            if (array === totalPointsPlayer1) {
+        if (pointsArray1 === array) {
+            if (faceFrequency[element] === 2) {
                 totalPointsPlayer1+=2;
                 $player1Score.text(`${totalPointsPlayer1}`);
-            } else if (array === totalPointsPlayer2) {
+            }
+        } else if (pointsArray2 === array) {
+            if (faceFrequency[element] === 2) {
                 totalPointsPlayer2+=2;
                 $player2Score.text(`${totalPointsPlayer2}`);
-            } else if (array === cribArray) {
+            }
+        } else if (cribArray === array) {
+            if (dealer === 'player2') {
+                if (faceFrequency[element] === 2) {
+                    totalPointsPlayer2+=2;
+                    $player2Score.text(`${totalPointsPlayer2}`);
+                }
+            } else if (dealer === 'player1') {
+                if (faceFrequency[element] === 2) {
+                    totalPointsPlayer1+=2;
+                    $player1Score.text(`${totalPointsPlayer1}`);
+                }
+            }
+        } else {
+            return () => {}
+        }
+    }
+}
+
+// check for matches equal to 15
+const checkForFifteen = (array) => {
+    let newArray = [...array];
+
+    for (let i = 0; i < array.length; i++) {
+        // for (let j = )
+        if ((array[i].val + 5) === 15 || (array[i].val + 10) === 15) {
+            if (pointsArray1 === array) {
+                totalPointsPlayer1+=2;
+                $player1Score.text(`${totalPointsPlayer1}`);
+            } else if (pointsArray2 === array) {
+                totalPointsPlayer2+=2;
+                $player2Score.text(`${totalPointsPlayer2}`);
+            } else if (cribArray === array) {
                 if (dealer === 'player2') {
                     totalPointsPlayer2+=2;
                     $player2Score.text(`${totalPointsPlayer2}`);
@@ -409,38 +444,20 @@ const checkForPair = (array) => {
                     totalPointsPlayer1+=2;
                     $player1Score.text(`${totalPointsPlayer1}`);
                 }
+            } else {
+                return () => {}
             }
         }
+
     }
-}
-
-// check for matches equal to 15
-const checkForFifteen1 = () => {
-    const values = (object) => {
-        return object.value;
-    }
-    let valueArray = pointsArray1.map(values);
-    console.log(faceArray);
-
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-
-    })
-}
+};
 
 // move to next round
 const nextRound = () => {
-    alert(`Next Round!`)
-    gameplayCounter = 0;
+    alert(`Next Round!`);
+    playerCounter++
     nextDealer();
-    console.log(dealer);
     resetDom();
-    myDeck.generateDeck(store);
-    startGame();
-    console.table(player2Array);
-    console.table(player1Array);
     // if (dealer === 'player2') {
     //     player2();
     // } else {
@@ -450,28 +467,45 @@ const nextRound = () => {
 
 // update player counter / update dealer
 const nextDealer = () => {
-    playerCounter++
     if (playerCounter % 2 === 0) {
-        dealer === 'player1';
+        dealer = 'player1';
     } else {
-        dealer === 'player2';
+        dealer = 'player2';
     }
+    console.log(dealer);
 }
 
 // resetDom function sets up game for next round, emptying arrays, setting gameplay count to 0, generating new deck
 const resetDom = () => {
     pointsArray1 = [];
     pointsArray2 = [];
+    cribArray = [];
     $('#crib').children('.hand').remove();
     $player2Div.children('.hand').remove();
     $player1Div.children('.hand').remove();
+    newRound();
+}
+
+// newRound() starts a new round
+const newRound = () => {
+    myDeck.generateDeck(store);
+    startGame();
+}
+
+// declareWinner() function - ends the game and declares the winner (first person to reach 10 points)
+const declareWinner = () => {
+    if (totalPointsPlayer1 === 20) {
+        prompt(`You've won the game!! Play again?`, `Yes/No`);
+    } else if (totalPointsPlayer2 === 20) {
+        prompt(`Player 2 is the winner! You've been bested. Try Again?`, `Yes/No`);
+    } else {
+        return () => {}
+    }
 }
 
 
 ///// EVENT LISTENERS & HANDLERS /////
 
-// On click of settings > display settings options
-// On click of How to Play > display instructions
 // On click of Start Game > run startGame() function
 $startGame.on('click', startGame);
 

@@ -1,4 +1,3 @@
-
 ///// VARIABLES, OBJECTS & ARRAYS /////
 // player1Array/player2Array = create an array to hold player 1 & player 2 cards (while in gameplay, these cards will change each hand) [should only hold 6 elements **// should be emptied after each round]
 let player1Array = [];
@@ -256,7 +255,10 @@ const moveComputerCardstoCrib = () => {
         pointsArray1 = [...player1Array];
         pointsArray2 = [...player2Array];
         flipStarterCard();
-        alert(`Time to play!`);
+        console.log(pointsArray1);        
+        console.log(player1Array);
+        console.log(pointsArray2);
+        console.log(player2Array);
         gameplay();
     }
 };
@@ -272,7 +274,19 @@ const moveComputerCardstoCrib = () => {
 //=====================
 
 const gameplay = () => {
-    $player1Div.children('.hand').on('click', player1);
+    if (playerCounter % 2 !== 0) {
+        $player1Div.children('.hand').on('click', player1);
+        endOfHand();
+        console.log(playerCounter);
+        // check for end of hand
+        // check for end of round
+    } else if (playerCounter % 2 === 0) {
+        console.log(playerCounter);
+        endOfHand();
+        player2();
+        // check for end of hand
+        // check for end of round
+    }
 }
 
 const player1 = (event) => {
@@ -299,16 +313,18 @@ const player1 = (event) => {
         player1Array.splice(`${currentIndex}`, 1);
         // remove from DOM
         $(event.currentTarget).remove(); 
-
-        endOfHand();
+        // add +1 to playerCounter
+        playerCounter++; 
+        console.log(gameplayArray);
+        gameplay();  
 }
 
 const player2 = () => {
     
     const name = (element) => {
-        // if (element.val <= (31 - gameplayCounter)) {
+        if (element.val <= (31 - gameplayCounter)) {
             return element.name;
-        // }
+        }
     }
     let currentIndex = player2Array.findIndex(name);
     
@@ -326,37 +342,40 @@ const player2 = () => {
     // remove from array
     player2Array.splice(`${currentIndex}`, 1);
     // remove from DOM
-    $player2Div.children('.hand').eq(0).remove();
-    endOfHand();
+    $player2Div.children().eq(5).remove();
+    // add +1 to playerCounter
+    playerCounter++; 
+    gameplay();  
 }
 
 // // endOfHand() function - if gameplayCounter === 31 or both players "go"
 const endOfHand = () => {
     console.table(player1Array);
     console.table(player2Array);
-    if (gameplayArray.length % 2 !== 0) {
-        player2();
-    } else if (player1Array.length === 0 && player2Array.length === 0) {
+    // if (gameplayCounter >= 29 && gameplayArray.length < 8) {
+    //     alert('No more plays left this round - start from 0')
+    //     gameplayCounter = 0;
+    //     playerCounter = 1;
+    //     $gameplayCards.children('.hand').remove();
+    //     gameplay();
+    // } else if (player1Array.length === 0 && player2Array.length === 0) {
+    //     endOfRound();
+    // }
+    if (player1Array.length === 0 && player2Array.length === 0) {
         endOfRound();
-    } else {
-        return () => {}
     }
 }
+
+// playerGo() //
+$('.go').on('click', endOfHand);
 
 // endOfRound() function - check to see if length of gameplayArray is 8
 const endOfRound = () => {
     console.log('Round is over!');
     addCards();
-    checkForPair1();
-    checkForPair2();
-    checkForPairCrib();
-    gameplayCounter = 0;
-    alert(`Player 1 Score: ${totalPointsPlayer1}!\br Player 2 Score: ${totalPointsPlayer2}`);
 }
 
-// function to add the cards back to the correct player for "counting"
 const addCards = () => {
-    $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
     for (let i = 0; i < pointsArray1.length; i++) {
         const $div = $('<div>').addClass('hand').appendTo($player1Div);
         $('<h2>').text(pointsArray1[i].name).appendTo($div);
@@ -365,122 +384,74 @@ const addCards = () => {
         const $div = $('<div>').addClass('hand').appendTo($player2Div);
         $('<h2>').text(pointsArray2[i].name).appendTo($div);
     }
-    for (let i = 0; i < gameplayArray.length; i++) {
-        $gameplayCards.children('.hand').remove();
-    }
-    alert(`Time to count points for the round!`);
-    for (let i = 0; i < cribArray.length; i++) {
-        $('#crib').children('.hand').children().css('opacity', 1);
-    }
+    $('#crib > .hand').removeClass('hidden');
 }
 
-// check for matching item in pointsArray1
-const checkForPair1 = () => {
-    const values = (object) => {
-        return object.face;
-    }
-    let faceArray = pointsArray1.map(values);
-    console.log(faceArray);
+//     // if it is - then run checkForRoundPoints()
+//     // else return empty function
 
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-        if (faceFrequency[element]) {
-            faceFrequency[element]++;
-        } else {
-            faceFrequency[element] = 1;
-        }
-    });
-    console.log(faceFrequency);
+// // checkForGameplayPoints()
+// const checkForGameplayPoints = () => {
+//     console.log('points');
+//     gameplay();
+    // if the card placed makes the gameplayCounter total equal 15
+        // >> current player gets +2 totalPoints
+        // >> peg moves 2 holes
+        // >> return
+    // if the card placed equals the previous card
+        // >> current player gets +2 totalPoints
+        // >> peg moves 2
+        // >> return
+    // if the card placed equals the previous 2 cards (triplet)
+        // >> current player gets +6 totalPoints
+        // >> peg moves 6
+        // >> return
+    // if the card placed equals the previous 3 cards (double pair/4 of a kind)
+        // >> current player gets +12 totalPoints
+        // >> peg moves 12
+        // >> return
+    // EXTRA DIFFICULT - DO AS A DAY 2 ITEM //
+    // if the card placed forms a run sequence with 2+ previous cards
+        // >> add # of cards in run to totalPoints
+        // >> return
+    // reset this value every time it gets to 31 // or every time someone presses "go" [Need to figure out how to reset when someone presses go, while still counting points > add 1 to other player & reset?]
+// }
 
-    for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            totalPointsPlayer1+=2;
-            $player1Score.text(`${totalPointsPlayer1}`);
+// randomComputerCard() //
+
+// checkForRoundPoints() = function to check whether the gameplayArray equals 8 and to add up end-of-game points
+const checkForRoundPoints = () => {
+    for (let i = 0; i < pointsArray1.length; i++) {
+        if (pointsArray1[0].val === pointsArray1[i++].val) {
+            console.log('add 2 points');
+            totalPointsPlayer1 += 2;
+        } else if ((pointsArray1[i].val + pointsArray1[i++].val) === 15) {
+            console.log('add 2 points');
+            totalPointsPlayer1 += 2;
         }
     }
-    console.log(totalPointsPlayer1);
+    alert(`Player 1 wins ${totalPointsPlayer1} for this round!`);
+    // FOR player1Array {
+        // different sorting methods for each? 
+        // points (store in object?)
+        // each combo that equals 15 is 2 points
+        // each combo that is a pair equals 2 points
+        // each combo that is a 3+ cards in sequence, count 1 per card
+        // 4 cards of the same suit, 1 per card
+        // If jack is the same suit as flipped card in hand or crib, +1 point
+    // }
+    // FOR player2Array {
+        // different sorting methods for each? 
+        // points (store in object?)
+        // each combo that equals 15 is 2 points
+        // each combo that is a pair equals 2 points
+        // each combo that is a 3+ cards in sequence, count 1 per card
+        // 4 cards of the same suit, 1 per card
+        // If jack is the same suit as flipped card in hand or crib, +1 point
+    // }
+    // FOR crib {} 
 }
 
-// check for matching item in pointsArray2
-const checkForPair2 = () => {
-    const values = (object) => {
-        return object.face;
-    }
-    let faceArray = pointsArray2.map(values);
-    console.log(faceArray);
-
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-        // if the particular element exist, add 1 to counter
-        if (faceFrequency[element]) {
-            faceFrequency[element]++;
-        } else {
-            // if it's the first time, equals 1
-            faceFrequency[element] = 1;
-        }
-    });
-    console.log(faceFrequency);
-
-    // loop over array and add 2 points for every pairs
-    for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            totalPointsPlayer2+=2;
-            $player2Score.text(`${totalPointsPlayer2}`);
-        }
-    }
-    console.log(totalPointsPlayer2);
-}
-
-// check for pair points in crib
-const checkForPairCrib = () => {
-    const values = (object) => {
-        return object.face;
-    }
-    let faceArray = cribArray.map(values);
-    console.log(faceArray);
-
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-        // if the particular element exist, add 1 to counter
-        if (faceFrequency[element]) {
-            faceFrequency[element]++;
-        } else {
-            // if it's the first time, equals 1
-            faceFrequency[element] = 1;
-        }
-    });
-    console.log(faceFrequency);
-
-    // loop over array and add 2 points for every pairs
-    for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            if (dealer === 'player1') {
-                totalPointsPlayer1+=2;
-                $player1Score.text(`${totalPointsPlayer1}`);
-            } else if (dealer === 'player2') {
-                totalPointsPlayer2+=2;
-                $player2Score.text(`${totalPointsPlayer2}`);
-            }
-        }
-    }
-    console.log(cribArray);
-}
-
-// check for matches equal to 15
-const checkForFifteen1 = () => {
-    const values = (object) => {
-        return object.value
-    }
-}
 
 
 ///// EVENT LISTENERS & HANDLERS /////

@@ -105,18 +105,10 @@ $(() => {
 // CACHED DOM ELEMENTS:
     // 1. Settings Modal Button
     const $settings = $('#modals').children('button').eq(0);
-    // 2. How to Play Modal Button
-    const $howTo = $('#modals').children('button').eq(1);
     // 3. Start Game button
     const $startGame = $('#startGame');
-    // 4. Gameboard [to manipulate pegs / append pegs to it]
-    const $gameboard = $('#board');
-    // 5. Pegs (4) - [For ease, players always have some colored pegs]
-    const $peg1 = $('#board > h2');
     // 6. Starter card
     const $starterCard = $('#starterCard');
-    // 7. Go Button
-    const $go = $('.go');
     // 8. Player 1 Score text, Player 2 score text
     const $player1Score = $('section > div:first > h2 > span');
     const $player2Score = $('section > div:last > h2 > span');
@@ -126,10 +118,10 @@ $(() => {
     const $player1Div = $('#player1');
     // 11. Player 2
     const $player2Div = $('#player2');
-    // 12. Crib Button
-    const $cribButton = $('#cribButton');
     // // 13. gameplay Div
     const $gameplayCards = $('#gameplayCards');
+    // Crib text
+    const $cribText = $('#crib').children('h2').children();
     
 
 ///// FUNCTIONS /////
@@ -193,6 +185,7 @@ const startGame = () => {
     // chooseDealer();
     // assign each player gameplay array 6 random cards from the deckArray & display for player 1
     dealCards();
+    displayCrib();
     alert(`Player 1 > click on 2 cards to choose for the crib`);
     // EXTRA ADD: dealing the cards to the players using animation
     $player1Div.children('.hand').on('click', player1ToCrib);
@@ -260,6 +253,15 @@ const moveComputerCardstoCrib = () => {
         gameplay();
     }
 };
+
+const displayCrib = () => {
+    console.log('display crib');
+    if (dealer === 'player1') {
+        $cribText.text(`Player 1's `)
+    } else if (dealer === 'player2') {
+        $cribText.text(`Player 2's `)
+    }
+}
 
 //=====================
 // GAMEPLAY FUNCTIONS

@@ -30,7 +30,7 @@ For a bit of [history](https://en.wikipedia.org/wiki/Cribbage).
 ![wireframe](wireframe/Desktop_Cribbage.png)
 
 ### How to Play Page
-![wireframe](wireframe/How To Play.png)
+![wireframe](wireframe/How_To_Play.png)
 
 ## Challenges/Future Goals:
 - Using event listeners and handlers to find elements of various arrays

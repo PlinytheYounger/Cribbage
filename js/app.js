@@ -199,6 +199,7 @@ const startGame = () => {
     // chooseDealer();
     // assign each player gameplay array 6 random cards from the deckArray & display for player 1
     dealCards();
+    alert(`Player 1 > click on 2 cards to choose for the crib`);
     // EXTRA ADD: dealing the cards to the players using animation
     $player1Div.children('.hand').on('click', player1ToCrib);
 }
@@ -256,6 +257,7 @@ const moveComputerCardstoCrib = () => {
         pointsArray1 = [...player1Array];
         pointsArray2 = [...player2Array];
         flipStarterCard();
+        console.table(starterCard);
         alert(`Time to play!`);
         gameplay();
     }
@@ -332,8 +334,6 @@ const player2 = () => {
 
 // // endOfHand() function - if gameplayCounter === 31 or both players "go"
 const endOfHand = () => {
-    console.table(player1Array);
-    console.table(player2Array);
     if (gameplayArray.length % 2 !== 0) {
         player2();
     } else if (player1Array.length === 0 && player2Array.length === 0) {
@@ -345,13 +345,13 @@ const endOfHand = () => {
 
 // endOfRound() function - check to see if length of gameplayArray is 8
 const endOfRound = () => {
-    console.log('Round is over!');
     addCards();
-    checkForPair1();
-    checkForPair2();
-    checkForPairCrib();
+    checkForPair(pointsArray1);
+    checkForPair(pointsArray2);
+    checkForPair(cribArray);
     gameplayCounter = 0;
-    alert(`Player 1 Score: ${totalPointsPlayer1}!\br Player 2 Score: ${totalPointsPlayer2}`);
+    alert(`Player 1 Score: ${totalPointsPlayer1}! Player 2 Score: ${totalPointsPlayer2}!`);
+    nextRound();
 }
 
 // function to add the cards back to the correct player for "counting"
@@ -374,14 +374,14 @@ const addCards = () => {
     }
 }
 
-// check for matching item in pointsArray1
-const checkForPair1 = () => {
+// check for pairs in each array
+const checkForPair = (array) => {
+    let newArray = [...array];
+    newArray.push(starterCard[0]);
     const values = (object) => {
         return object.face;
     }
-    let faceArray = pointsArray1.map(values);
-    console.log(faceArray);
-
+    let faceArray = newArray.map(values);
     // create empty object
     let faceFrequency = {}
     // loop through array
@@ -392,94 +392,79 @@ const checkForPair1 = () => {
             faceFrequency[element] = 1;
         }
     });
-    console.log(faceFrequency);
 
     for (let element in faceFrequency) {
         if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            totalPointsPlayer1+=2;
-            $player1Score.text(`${totalPointsPlayer1}`);
-        }
-    }
-    console.log(totalPointsPlayer1);
-}
-
-// check for matching item in pointsArray2
-const checkForPair2 = () => {
-    const values = (object) => {
-        return object.face;
-    }
-    let faceArray = pointsArray2.map(values);
-    console.log(faceArray);
-
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-        // if the particular element exist, add 1 to counter
-        if (faceFrequency[element]) {
-            faceFrequency[element]++;
-        } else {
-            // if it's the first time, equals 1
-            faceFrequency[element] = 1;
-        }
-    });
-    console.log(faceFrequency);
-
-    // loop over array and add 2 points for every pairs
-    for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            totalPointsPlayer2+=2;
-            $player2Score.text(`${totalPointsPlayer2}`);
-        }
-    }
-    console.log(totalPointsPlayer2);
-}
-
-// check for pair points in crib
-const checkForPairCrib = () => {
-    const values = (object) => {
-        return object.face;
-    }
-    let faceArray = cribArray.map(values);
-    console.log(faceArray);
-
-    // create empty object
-    let faceFrequency = {}
-    // loop through array
-    faceArray.forEach((element) => {
-        // if the particular element exist, add 1 to counter
-        if (faceFrequency[element]) {
-            faceFrequency[element]++;
-        } else {
-            // if it's the first time, equals 1
-            faceFrequency[element] = 1;
-        }
-    });
-    console.log(faceFrequency);
-
-    // loop over array and add 2 points for every pairs
-    for (let element in faceFrequency) {
-        if (faceFrequency[element] === 2) {
-            console.log('plus 2 points');
-            if (dealer === 'player1') {
+            if (array === totalPointsPlayer1) {
                 totalPointsPlayer1+=2;
                 $player1Score.text(`${totalPointsPlayer1}`);
-            } else if (dealer === 'player2') {
+            } else if (array === totalPointsPlayer2) {
                 totalPointsPlayer2+=2;
                 $player2Score.text(`${totalPointsPlayer2}`);
+            } else if (array === cribArray) {
+                if (dealer === 'player2') {
+                    totalPointsPlayer2+=2;
+                    $player2Score.text(`${totalPointsPlayer2}`);
+                } else if (dealer === 'player1') {
+                    totalPointsPlayer1+=2;
+                    $player1Score.text(`${totalPointsPlayer1}`);
+                }
             }
         }
     }
-    console.log(cribArray);
 }
 
 // check for matches equal to 15
 const checkForFifteen1 = () => {
     const values = (object) => {
-        return object.value
+        return object.value;
     }
+    let valueArray = pointsArray1.map(values);
+    console.log(faceArray);
+
+    // create empty object
+    let faceFrequency = {}
+    // loop through array
+    faceArray.forEach((element) => {
+
+    })
+}
+
+// move to next round
+const nextRound = () => {
+    alert(`Next Round!`)
+    gameplayCounter = 0;
+    nextDealer();
+    console.log(dealer);
+    resetDom();
+    myDeck.generateDeck(store);
+    startGame();
+    console.table(player2Array);
+    console.table(player1Array);
+    // if (dealer === 'player2') {
+    //     player2();
+    // } else {
+    //     $player1Div.children('.hand').on('click', player1);
+    // }
+}
+
+// update player counter / update dealer
+const nextDealer = () => {
+    playerCounter++
+    if (playerCounter % 2 === 0) {
+        dealer === 'player1';
+    } else {
+        dealer === 'player2';
+    }
+}
+
+// resetDom function sets up game for next round, emptying arrays, setting gameplay count to 0, generating new deck
+const resetDom = () => {
+    pointsArray1 = [];
+    pointsArray2 = [];
+    $('#crib').children('.hand').remove();
+    $player2Div.children('.hand').remove();
+    $player1Div.children('.hand').remove();
 }
 
 

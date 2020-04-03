@@ -151,14 +151,22 @@ const dealCards = () => {
             player1Array.push(myDeck.cards[number]);
             // create new div and add to player1Div / 'hand'
             const $div = $('<div>').addClass('hand').appendTo($player1Div);
-            // create new h2 and attach to div - give value of 'name' to display
-            $('<h2>').text(myDeck.cards[number].name).appendTo($div);
+            // create new h2 and attach to div - give value of 'name' to display > if the suit is diamond or heart - make color red
+            if (myDeck.cards[number].suit === suit[2] || myDeck.cards[number].suit === suit[3]) {
+                $('<h2>').text(myDeck.cards[number].name).addClass('red').appendTo($div);
+            } else {
+                $('<h2>').text(myDeck.cards[number].name).appendTo($div);
+            }
             // splice from deckArray
             myDeck.cards.splice(number, 1);
         } else if (i % 2 === 0) {
             player2Array.push(myDeck.cards[number]); 
             const $div = $('<div>').addClass('hand').appendTo($player2Div);
-            $('<h2>').text(myDeck.cards[number].name).addClass('hidden').appendTo($div);
+            if (myDeck.cards[number].suit === suit[2] || suit[3]) {
+                $('<h2>').text(myDeck.cards[number].name).addClass('red').addClass('hidden').appendTo($div);
+            } else {
+                $('<h2>').text(myDeck.cards[number].name).appendTo($div);
+            }
             myDeck.cards.splice(number, 1);
         } 
     }
@@ -209,7 +217,11 @@ const player1ToCrib = (event) => {
         cribArray.push(player1Array[currentIndex]);
         // add element to cribDiv
         const $div = $('<div>').addClass('hand').appendTo($('#crib'));
-        $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        if (player1Array[currentIndex].suit === suit[2] || player1Array[currentIndex].suit === suit[3]) {
+            $('<h2>').text(player1Array[currentIndex].name).addClass('red').appendTo($div);
+        } else {
+            $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        }
         // remove from array
         player1Array.splice(`${currentIndex}`, 1);
         // remove from DOM
@@ -236,7 +248,7 @@ const moveComputerCardstoCrib = () => {
         player2Array.splice(num, 1);
         $player2Div.children().eq(5).remove();
         const $div = $('<div>').addClass('hand').appendTo($('#crib'));
-        $('<h2>').text(myDeck.cards[num].name).addClass('hidden').appendTo($div);
+        $('<h2>').text(myDeck.cards[num].name).appendTo($div);
     }
     if (cribArray.length === 4) {
         $player1Div.children('.hand').off();
@@ -322,6 +334,7 @@ const endOfHand = () => {
     if (gameplayArray.length % 2 !== 0) {
         player2();
     } else if (player1Array.length === 0 && player2Array.length === 0) {
+        addCards();
         endOfRound();
     } else {
         return () => {}
@@ -342,13 +355,14 @@ const endOfHand = () => {
 
 // endOfRound() function - check to see if length of gameplayArray is 8
 const endOfRound = () => {
-    addCards();
     checkForPair(pointsArray1);
     checkForPair(pointsArray2);
     checkForPair(cribArray);
-    // checkForFifteen(pointsArray1);
-    // checkForFifteen(pointsArray2);
-    // checkForFifteen(cribArray);
+    checkForFifteen(pointsArray1);
+    checkForFifteen(pointsArray2);
+    checkForFifteen(cribArray);
+    $player1Score.text(`${totalPointsPlayer1}`);
+    $player2Score.text(`${totalPointsPlayer2}`);
     gameplayCounter = 0;
     $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
     alert(`Player 1 Score: ${totalPointsPlayer1}! Player 2 Score: ${totalPointsPlayer2}!`);
@@ -398,23 +412,19 @@ const checkForPair = (array) => {
         if (pointsArray1 === array) {
             if (faceFrequency[element] === 2) {
                 totalPointsPlayer1+=2;
-                $player1Score.text(`${totalPointsPlayer1}`);
             }
         } else if (pointsArray2 === array) {
             if (faceFrequency[element] === 2) {
                 totalPointsPlayer2+=2;
-                $player2Score.text(`${totalPointsPlayer2}`);
             }
         } else if (cribArray === array) {
             if (dealer === 'player2') {
                 if (faceFrequency[element] === 2) {
                     totalPointsPlayer2+=2;
-                    $player2Score.text(`${totalPointsPlayer2}`);
                 }
             } else if (dealer === 'player1') {
                 if (faceFrequency[element] === 2) {
                     totalPointsPlayer1+=2;
-                    $player1Score.text(`${totalPointsPlayer1}`);
                 }
             }
         } else {
@@ -423,34 +433,28 @@ const checkForPair = (array) => {
     }
 }
 
-// check for matches equal to 15
+// checks if 2 cards add to equal 15 (value)
 const checkForFifteen = (array) => {
-    let newArray = [...array];
+    sum = 15;
 
-    for (let i = 0; i < array.length; i++) {
-        // for (let j = )
-        if ((array[i].val + 5) === 15 || (array[i].val + 10) === 15) {
-            if (pointsArray1 === array) {
-                totalPointsPlayer1+=2;
-                $player1Score.text(`${totalPointsPlayer1}`);
-            } else if (pointsArray2 === array) {
-                totalPointsPlayer2+=2;
-                $player2Score.text(`${totalPointsPlayer2}`);
-            } else if (cribArray === array) {
-                if (dealer === 'player2') {
-                    totalPointsPlayer2+=2;
-                    $player2Score.text(`${totalPointsPlayer2}`);
-                } else if (dealer === 'player1') {
-                    totalPointsPlayer1+=2;
-                    $player1Score.text(`${totalPointsPlayer1}`);
+    for (let j = 0; j < array.length; j++) {
+        for (let i = j+1; i < array.length; i++) {
+            if (array[i].val + array[j].val === sum) {
+                if (pointsArray1 === array) {
+                    totalPointsPlayer1 += 2;
+                } else if (pointsArray2 === array) {
+                    totalPointsPlayer2 += 2;
+                } else if (cribArray === array) {
+                    if (dealer === 'player2') {
+                        totalPointsPlayer2+= 2;
+                    } else if (dealer === 'player1') {
+                        totalPointsPlayer1 += 2;
+                    }
                 }
-            } else {
-                return () => {}
-            }
+            } 
         }
-
     }
-};
+}
 
 // move to next round
 const nextRound = () => {
@@ -480,6 +484,8 @@ const resetDom = () => {
     pointsArray1 = [];
     pointsArray2 = [];
     cribArray = [];
+    starterCard = [];
+    $starterCard.children('.hand').remove();
     $('#crib').children('.hand').remove();
     $player2Div.children('.hand').remove();
     $player1Div.children('.hand').remove();

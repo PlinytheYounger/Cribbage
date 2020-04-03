@@ -2,6 +2,8 @@
     border: 1px solid red;
 } */
 
+@import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
 /*/// COLOR CODES /////*/
 
 /* light teal green/blue: #C6DFD6
@@ -20,14 +22,15 @@ body {
     font-size: 14px;
     background-color: #EDECEA;
     color: #464545;
+    font-family: 'Raleway', 'sans-serif';
 }
 
 h1 {
-    font-size: 3em;
+    font-size: 5em;
 }
 
 h2 {
-    font-size: 2em;
+    font-size: 3em;
 }
 
 button {
@@ -43,6 +46,7 @@ button {
 header {
     text-align: center;
     padding: 20px;
+    margin-bottom: 50px;
 }
 
 /*/////// MAIN DIV ////////*/
@@ -53,12 +57,14 @@ main {
     align-items: center;
     padding-top: 30px;
     padding-bottom: 30px;
+    height: 30vh;
+    margin-bottom: 100px;
 }
 
 #modals {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-between;
     width: 20%;
     margin-right: 5px;
     font-size: 1.5em;
@@ -83,7 +89,7 @@ a:hover {
 
 #board {
     width: 60%;
-    margin: 10px;
+    margin: 20px;
     text-align: center;
 }
 
@@ -108,17 +114,23 @@ section {
     align-items: flex-start;
     padding-top: 20px;
     padding-bottom: 20px;
+    margin-top: 20px;
 }
 
 .card {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 250px;
+    width: 450px;
 }
 
 .card > img {
     width: 70%;
+}
+
+.card > h2 > span {
+    color: #ACCCC4;
+    font-size: 1.25em;
 }
 
 #nextRound {
@@ -131,7 +143,7 @@ section {
     margin: 5px;
     background-color: #C4BCB8;
     height: 72px;
-    width: 250px;
+    width: 400px;
 }
 
 .hand > h2 {
@@ -142,6 +154,15 @@ section {
 .hidden {
     opacity: 0;
 }
+
+.red {
+    color: red;
+}
+
+/* .go {
+    width: 100px;
+    font-size: 2.5em;
+} */
 
 /*/////// FOOTER DIV ////////*/
 
@@ -154,11 +175,13 @@ section {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    
 }
 
-main {
+.container > main {
     width: 75%;
     line-height: 2.5em;
+    margin-top: 500px;
 }
 
 p, ul {

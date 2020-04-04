@@ -186,6 +186,29 @@ const flipStarterCard = () => {
     myDeck.cards.splice(number, 1);
 }
 
+// function to modulate rendering the cards from the deck
+const renderCards = (div, number) => {
+    const $div = $('<div>').addClass('hand');
+    if (myDeck.cards[number].suit === suit[0]) {
+        $('<h2>').text(myDeck.cards[number].name).addClass('noShow').appendTo($div);
+        $('<h2>').text(myDeck.cards[number].face).appendTo($div);
+        $('<img>').attr('src', 'images/club.png').appendTo($div);
+    } else if (myDeck.cards[number].suit === suit[1]) {
+        $('<h2>').text(myDeck.cards[number].name).addClass('noShow').appendTo($div);
+        $('<h2>').text(myDeck.cards[number].face).appendTo($div);
+        $('<img>').attr('src', 'images/spade.png').appendTo($div);
+    } else if (myDeck.cards[number].suit === suit[2]) {
+        $('<h2>').text(myDeck.cards[number].name).addClass('noShow').appendTo($div);
+        $('<h2>').text(myDeck.cards[number].face).addClass('red').appendTo($div);
+        $('<img>').attr('src', 'images/diamond.png').appendTo($div);
+    } else if (myDeck.cards[number].suit === suit[3]) {
+        $('<h2>').text(myDeck.cards[number].name).addClass('noShow').appendTo($div);
+        $('<h2>').text(myDeck.cards[number].face).addClass('red').appendTo($div);
+        $('<img>').attr('src', 'images/heart.png').appendTo($div);
+    }
+    $div.appendTo(div);
+}
+
 //=====================
 // startGame()
 // Runs upon click of 'Start Game' button.  

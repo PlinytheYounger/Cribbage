@@ -35,6 +35,13 @@ let player2Go = false;
 // player counter
 let playerCounter = 1;
 
+// turn counter
+let turnCounter = 1;
+
+// round points
+let roundPoints1 = 0;
+let roundPoints2 = 0;
+
 // generate a deck of card objects & store it in an array > this will be the deck
     // each card object will contain:
         // suit
@@ -97,14 +104,11 @@ class Deck {
 
 const myDeck = new Deck();
 myDeck.generateDeck(store);
-console.log(myDeck.cards);
 
 // jquery onload function
 $(() => {
 
 // CACHED DOM ELEMENTS:
-    // 1. Settings Modal Button
-    const $settings = $('#modals').children('button').eq(0);
     // 3. Start Game button
     const $startGame = $('#startGame');
     // 6. Starter card
@@ -180,14 +184,10 @@ const flipStarterCard = () => {
 
 // startGame() = when player clicks 'startGame' run startGame function
 const startGame = () => {
-    // EXTRA ADD: shuffle the deck using animation
-    // Randomly choose "dealer"
-    // chooseDealer();
     // assign each player gameplay array 6 random cards from the deckArray & display for player 1
     dealCards();
     displayCrib();
     alert(`Player 1 > click on 2 cards to choose for the crib`);
-    // EXTRA ADD: dealing the cards to the players using animation
     $player1Div.children('.hand').on('click', player1ToCrib);
 }
 
@@ -235,27 +235,30 @@ const defineCallback = () => {
 // picks 2 random cards from player2Array to add to cribArray after player1 has clicked 2 cards
 const moveComputerCardstoCrib = () => {
     for (let i = 0; i < 2; i++) {
-        let num = Math.floor(Math.random()*player2Array.length);
+        let num = Math.floor(Math.random());
         cribArray.push(player2Array[num]);
         // removes cards from player 2 array & from the DOM
         player2Array.splice(num, 1);
         $player2Div.children().eq(5).remove();
         const $div = $('<div>').addClass('hand').appendTo($('#crib'));
-        $('<h2>').text(myDeck.cards[num].name).appendTo($div);
+        if (player2Array[num].suit === suit[2] || player2Array[num].suit === suit[3]) {
+            $('<h2>').text(player2Array[num].name).addClass('red').appendTo($div);
+        } else {
+            $('<h2>').text(player2Array[num].name).appendTo($div);
+        }
     }
+
     if (cribArray.length === 4) {
         $player1Div.children('.hand').off();
         pointsArray1 = [...player1Array];
         pointsArray2 = [...player2Array];
         flipStarterCard();
-        console.table(starterCard);
-        alert(`Time to play!`);
         gameplay();
+        alert(`Time to play!`);
     }
 };
 
 const displayCrib = () => {
-    console.log('display crib');
     if (dealer === 'player1') {
         $cribText.text(`Player 1's `)
     } else if (dealer === 'player2') {
@@ -270,6 +273,7 @@ const displayCrib = () => {
 // player2()
 // endOfHand()
 // endOfRound()
+// gameplayPoints()
 //=====================
 
 const gameplay = () => {
@@ -295,21 +299,25 @@ const player1 = (event) => {
         $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
         // add element to gameplayCards Div
         const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
-        $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        if (player1Array[currentIndex].suit === suit[2] || player1Array[currentIndex].suit === suit[3]) {
+            $('<h2>').text(player1Array[currentIndex].name).addClass('red').appendTo($div);
+        } else {
+            $('<h2>').text(player1Array[currentIndex].name).appendTo($div);
+        }
         // remove from array
         player1Array.splice(`${currentIndex}`, 1);
         // remove from DOM
         $(event.currentTarget).remove(); 
-
+        gameplayPoints();
+        $player1Score.text(`${totalPointsPlayer1}`);
         endOfHand();
+        $player1Score.text(`${totalPointsPlayer1}`);
 }
 
 const player2 = () => {
     
     const name = (element) => {
-        // if (element.val <= (31 - gameplayCounter)) {
-            return element.name;
-        // }
+        return element.name;
     }
     let currentIndex = player2Array.findIndex(name);
     
@@ -323,16 +331,53 @@ const player2 = () => {
     $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
     // add element to gameplayCards Div
     const $div = $('<div>').addClass('hand').appendTo($gameplayCards);
-    $('<h2>').text(player2Array[currentIndex].name).appendTo($div);
+    if (player2Array[currentIndex].suit === suit[2] || player2Array[currentIndex].suit === suit[3]) {
+        $('<h2>').text(player2Array[currentIndex].name).addClass('red').appendTo($div);
+    } else {
+        $('<h2>').text(player2Array[currentIndex].name).appendTo($div);
+    }
     // remove from array
     player2Array.splice(`${currentIndex}`, 1);
     // remove from DOM
     $player2Div.children('.hand').eq(0).remove();
+    gameplayPoints();
+    $player2Score.text(`${totalPointsPlayer2}`);
     endOfHand();
+    $player2Score.text(`${totalPointsPlayer2}`);
+}
+
+// - [ ] Use player counter to check for gameplay points
+const gameplayPoints = () => {
+    let len = gameplayArray.length;
+    if (len >= 2) {
+        if (gameplayArray[len-2].face === gameplayArray[len-1].face) {
+            if (turnCounter % 2 != 0) {
+                alert(`Player 1 made a pair! Add 2 points to player 1 score.`);
+                totalPointsPlayer1+=2;
+            } else if (turnCounter % 2 === 0) {
+                alert(`Player 2 made a pair! Add 2 points to player 2 score.`);
+                totalPointsPlayer2+=2;
+            }
+        } else {
+            return () => {}
+        }
+    }
+    if (gameplayPoints === 15 || gameplayPoints === 30) {
+        if (turnCounter % 2 != 0) {
+            alert(`Gameplay count equals 15 - player 1 gets 2 points.`)
+            totalPointsPlayer1+=2;
+        } else if (turnCounter % 2 === 0) {
+            alert(`Gameplay count equals 15 - player 1 gets 2 points.`);
+            totalPointsPlayer2+=2;
+        }
+    } else {
+        return () => {}
+    }
 }
 
 // // endOfHand() function - if gameplayCounter === 31 or both players "go"
 const endOfHand = () => {
+    turnCounter++;
     if (gameplayArray.length % 2 !== 0) {
         player2();
     } else if (player1Array.length === 0 && player2Array.length === 0) {
@@ -341,6 +386,23 @@ const endOfHand = () => {
     } else {
         return () => {}
     }
+}
+
+// function to add the cards back to the correct player for "counting"
+const addCards = () => {
+    $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
+    for (let i = 0; i < pointsArray1.length; i++) {
+        const $div = $('<div>').addClass('hand').appendTo($player1Div);
+        $('<h2>').text(pointsArray1[i].name).appendTo($div);
+    }
+    for (let i = 0; i < pointsArray2.length; i++) {
+        const $div = $('<div>').addClass('hand').appendTo($player2Div);
+        $('<h2>').text(pointsArray2[i].name).appendTo($div);
+    }
+    for (let i = 0; i < gameplayArray.length; i++) {
+        $gameplayCards.children('.hand').remove();
+    }
+    alert(`Time to count points for the round!`);
 }
 
 //=====================
@@ -366,30 +428,11 @@ const endOfRound = () => {
     $player1Score.text(`${totalPointsPlayer1}`);
     $player2Score.text(`${totalPointsPlayer2}`);
     gameplayCounter = 0;
+    gameplayArray = [];
     $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
-    alert(`Player 1 Score: ${totalPointsPlayer1}! Player 2 Score: ${totalPointsPlayer2}!`);
+    alert(`Player 1 Total Score: ${totalPointsPlayer1}! Player 2 Total Score: ${totalPointsPlayer2}!`);
     declareWinner();
     nextRound();
-}
-
-// function to add the cards back to the correct player for "counting"
-const addCards = () => {
-    $gameplayCards.children('h2:last').children().text(`${gameplayCounter}`);
-    for (let i = 0; i < pointsArray1.length; i++) {
-        const $div = $('<div>').addClass('hand').appendTo($player1Div);
-        $('<h2>').text(pointsArray1[i].name).appendTo($div);
-    }
-    for (let i = 0; i < pointsArray2.length; i++) {
-        const $div = $('<div>').addClass('hand').appendTo($player2Div);
-        $('<h2>').text(pointsArray2[i].name).appendTo($div);
-    }
-    for (let i = 0; i < gameplayArray.length; i++) {
-        $gameplayCards.children('.hand').remove();
-    }
-    alert(`Time to count points for the round!`);
-    for (let i = 0; i < cribArray.length; i++) {
-        $('#crib').children('.hand').children().css('opacity', 1);
-    }
 }
 
 // check for pairs in each array
@@ -414,19 +457,27 @@ const checkForPair = (array) => {
         if (pointsArray1 === array) {
             if (faceFrequency[element] === 2) {
                 totalPointsPlayer1+=2;
+            } else if (faceFrequency[element] === 3) {
+                totalPointsPlayer1+=6;
             }
         } else if (pointsArray2 === array) {
             if (faceFrequency[element] === 2) {
                 totalPointsPlayer2+=2;
+            } else if (faceFrequency[element] === 3) {
+                totalPointsPlayer2+=6;
             }
         } else if (cribArray === array) {
             if (dealer === 'player2') {
                 if (faceFrequency[element] === 2) {
                     totalPointsPlayer2+=2;
+                } else if (faceFrequency[element] === 3) {
+                    totalPointsPlayer2+=6;
                 }
             } else if (dealer === 'player1') {
                 if (faceFrequency[element] === 2) {
                     totalPointsPlayer1+=2;
+                } else if (faceFrequency[element] === 3) {
+                    totalPointsPlayer2+=6;
                 }
             }
         } else {
@@ -442,15 +493,15 @@ const checkForFifteen = (array) => {
     for (let j = 0; j < array.length; j++) {
         for (let i = j+1; i < array.length; i++) {
             if (array[i].val + array[j].val === sum) {
-                if (pointsArray1 === array) {
+                if (array === pointsArray1) {
                     totalPointsPlayer1 += 2;
-                } else if (pointsArray2 === array) {
+                } else if (array === pointsArray2) {
                     totalPointsPlayer2 += 2;
-                } else if (cribArray === array) {
+                } else if (array === cribArray) {
                     if (dealer === 'player2') {
                         totalPointsPlayer2+= 2;
                     } else if (dealer === 'player1') {
-                        totalPointsPlayer1 += 2;
+                       totalPointsPlayer1+= 2;
                     }
                 }
             } 
@@ -464,11 +515,6 @@ const nextRound = () => {
     playerCounter++
     nextDealer();
     resetDom();
-    // if (dealer === 'player2') {
-    //     player2();
-    // } else {
-    //     $player1Div.children('.hand').on('click', player1);
-    // }
 }
 
 // update player counter / update dealer
@@ -478,7 +524,6 @@ const nextDealer = () => {
     } else {
         dealer = 'player2';
     }
-    console.log(dealer);
 }
 
 // resetDom function sets up game for next round, emptying arrays, setting gameplay count to 0, generating new deck
@@ -502,9 +547,9 @@ const newRound = () => {
 
 // declareWinner() function - ends the game and declares the winner (first person to reach 10 points)
 const declareWinner = () => {
-    if (totalPointsPlayer1 === 20) {
+    if (totalPointsPlayer1 >= 20) {
         prompt(`You've won the game!! Play again?`, `Yes/No`);
-    } else if (totalPointsPlayer2 === 20) {
+    } else if (totalPointsPlayer2 >= 20) {
         prompt(`Player 2 is the winner! You've been bested. Try Again?`, `Yes/No`);
     } else {
         return () => {}

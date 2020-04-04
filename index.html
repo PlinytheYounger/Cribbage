@@ -9,15 +9,15 @@
 <body>
     <header>
         <h1>Cribbage</h1>
-    </header>
-
-    <!-- main div to hold modals/buttons, cribbage board & flipped card -->
-    <main>
         <div id="modals">
             <button class="modal">Settings</button>
             <button class="modal"><a href="howToPlay.html" target="_blank">How to Play</a></button>
             <button class="modal" id="startGame">Start Game</button>
         </div>
+    </header>
+
+    <!-- main div to hold modals/buttons, cribbage board & flipped card -->
+    <main>
 
         <div id="board">
             <img src="images/cribbageBoardTemplate.jpg" alt="cribbage board">
@@ -36,13 +36,13 @@
             <img src="images/cardback.jpeg" alt="card">
             <h2>Player 1</h2>
             <!-- <button class="go">Go!</button> -->
-            <h2>Score: <span>0</span></h2>
+            <h2>Score: <span class="grow">0</span></h2>
         </div>
 
         <div class="card" id="gameplayCards">
             <img src="images/cardback.jpeg" alt="card">
             <h2>Gameplay Cards</h2>
-            <h2>Gameplay Count: <span>0</span></h2>
+            <h2>Round Count: <span class="grow">0</span></h2>
         </div>
 
         <div class="card" id="crib">
@@ -54,7 +54,7 @@
             <img src="images/cardback.jpeg" alt="card">
             <h2>Player 2</h2>
             <!-- <button class="go">Go!</button> -->
-            <h2>Score: <span>0</span></h2>
+            <h2>Score: <span class="grow">0</span></h2>
         </div>
 
     </section>

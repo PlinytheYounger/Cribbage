@@ -89,9 +89,12 @@ a:hover {
 }
 
 #board {
-    width: 60%;
-    margin: 20px;
+    width: 90%;
     text-align: center;
+}
+
+#board > img {
+    width: 60%;
 }
 
 .hide {

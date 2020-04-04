@@ -116,8 +116,6 @@ $(() => {
     // 8. Player 1 Score text, Player 2 score text
     const $player1Score = $('section > div:first > h2 > span');
     const $player2Score = $('section > div:last > h2 > span');
-    // 9. Player 1 hand, Gameplay Cards, Crib, Player 2 hand
-    const $player1Hand = $('#player1').children('h2').eq(1).children('span');
     // 10. Player 1
     const $player1Div = $('#player1');
     // 11. Player 2
@@ -166,14 +164,6 @@ const dealCards = () => {
             myDeck.cards.splice(number, 1);
         } 
     }
-}
-
-const flipStarterCard = () => {
-    let number  = Math.floor(Math.random()*myDeck.cards.length);
-    starterCard.push(myDeck.cards[number]);
-    const $div = $('<div>').addClass('hand').appendTo($starterCard);
-    $('<h2>').text(myDeck.cards[number].name).appendTo($div);
-    myDeck.cards.splice(number, 1);
 }
 
 //=====================
@@ -257,6 +247,14 @@ const moveComputerCardstoCrib = () => {
         alert(`Time to play!`);
     }
 };
+
+const flipStarterCard = () => {
+    let number  = Math.floor(Math.random()*myDeck.cards.length);
+    starterCard.push(myDeck.cards[number]);
+    const $div = $('<div>').addClass('hand').appendTo($starterCard);
+    $('<h2>').text(myDeck.cards[number].name).appendTo($div);
+    myDeck.cards.splice(number, 1);
+}
 
 const displayCrib = () => {
     if (dealer === 'player1') {

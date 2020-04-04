@@ -78,9 +78,6 @@ class Card {
             this.val = val
         }
     }
-    // displayCards(arr1, arr2) {
-
-    // }
 }
 
 class Deck {
@@ -545,9 +542,9 @@ const newRound = () => {
 
 // declareWinner() function - ends the game and declares the winner (first person to reach 10 points)
 const declareWinner = () => {
-    if (totalPointsPlayer1 >= 20) {
+    if (totalPointsPlayer1 >= 10) {
         prompt(`You've won the game!! Play again?`, `Yes/No`);
-    } else if (totalPointsPlayer2 >= 20) {
+    } else if (totalPointsPlayer2 >= 10) {
         prompt(`Player 2 is the winner! You've been bested. Try Again?`, `Yes/No`);
     } else {
         return () => {}

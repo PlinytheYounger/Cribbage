@@ -1,4 +1,6 @@
-
+const listStyle = {
+    listStyle: 'none',
+}
 
 export default function Instructions() {
     return(
@@ -23,7 +25,7 @@ export default function Instructions() {
                 
                     <b>The object</b> of the game is to be the first player to score 121 points.</p>
                 <h2>Setup</h2>
-                <ul>
+                <ul style={listStyle}>
                     <li>Uses a standard 52-card pack</li>
                     <li>Player is determined randomly.</li>
                     <li>Dealer "deals" 6 cards to each player.</li>
@@ -34,7 +36,7 @@ export default function Instructions() {
                 </ul>
                 <h2>How to Play</h2>
                 <div id="instructions">
-                    <ul>
+                    <ul style={listStyle}>
                         <li><b>Non-dealer starts</b> and lays one of their cards face-up on the table. Then the dealer - alternating turns until all cards have been laid on the table. These hands will be used at the end of the round to tally points.</li>
                         <li><b>As each person plays, they announce a running total by the addition of the last card to all those previously played.</b> I.e. if there is a 3 and 4 on the table and I place a 5, the total I say is "12" instead of 5. <i>This is counted by the "Gamplay Count" counter.</i></li>
                         <li><b>During play, the running total may never be carried beyond 31.</b> If a player cannot add another card without exceeding 31, the count returns to zero and play resumes, starting with the person who couldn't play.</li>
@@ -45,7 +47,7 @@ export default function Instructions() {
                         <li><b>The first person to reach 121 points (or cross the finish line with the pegs) is the winner!</b></li>
                     </ul>
                     <h2>Points</h2>
-                    <ul>
+                    <ul style={listStyle}>
                         <li>Each combo of cards that totals 15: <b>2 points (face cards = 10 count)</b></li>
                         <li>Each pair of cards of the same rank: <b>2 points</b></li>
                         <li>Each combo of 3 or more cards in sequence (run): <b>1 point for each card in run</b></li>

@@ -1,5 +1,3 @@
-import cribbageBoard from '../../images/cribbageBoardTemplate.jpg';
-import cardBack from '../../images/cardback.jpeg';
 import singleCard from './Card/Card';
 import {useState} from 'react';
 import {Button} from '@material-ui/core'

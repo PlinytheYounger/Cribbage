@@ -1,4 +1,3 @@
-import singleCard from './Card/Card';
 import {useState} from 'react';
 import {Button} from '@material-ui/core'
 import Card from './Card/Card'

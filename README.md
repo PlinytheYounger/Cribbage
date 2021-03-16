@@ -4,7 +4,7 @@
 
 ## Project Link
 
-[Cribbage 2.0](https://plinytheyounger.github.io/Cribbage2.0/)
+[Cribbage](https://amazing-colden-e5054f.netlify.app/)
 
 ================================================
 
@@ -26,21 +26,17 @@ For a bit of [history](https://en.wikipedia.org/wiki/Cribbage).
 * HTML5
 * CSS
 * Javascript
-* jQuery
+* React.js
 
 ## Wireframe
 
 ### Main Page
-![wireframe](wireframe/Desktop_Cribbage.png)
+![home page](./src/images/main_page_cards.png)
 
 ### How to Play Page
-![wireframe](wireframe/How_To_Play.png)
+![how to play](./src/images/instructions.png)
 
 ## Challenges/Future Goals:
-- Using event listeners and handlers to find elements of various arrays
-- Creating the gameplay logic; there are many nuances and subleties - so I created a very basic version and plan to update it to the point of a full version of the game and expanding levels of difficulty
-- Incorporating the gameboard & peg movements as the score increases
-- More Responsive Design
-- Creating more interactive elements using animations / transitions / drag & drop - make it more of an "adventure" game where the design theme changes as the difficulty increases.
-- Building out a beginner-geared version that would utilize timeouts and hints for those who want to learn how to play
-- Building out a more difficult version that includes a more strategic computer opponent
+- Finalizing the gameplay logic; there are many nuances and subleties - so I created a very basic version and plan to update it to the point of a full version of the game and expanding levels of difficulty
+- Incorporating the gameboard & peg movement UI as the score increases
+- Mobile Design version

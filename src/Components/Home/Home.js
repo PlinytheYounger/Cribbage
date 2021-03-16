@@ -3,7 +3,9 @@ import {Button} from '@material-ui/core'
 import Card from './Card/Card'
 
 /*-----------------------
+#########################
 STYLING
+#########################
 -------------------------*/
 const sectionStyle = {
     backgroundColor: '#d3d3d3',
@@ -29,11 +31,18 @@ const buttonStyle = {
 }
 
 /*-----------------------
-COMPONENT
+#########################
+FUNCTIONAL COMPONENT
+#########################
 -------------------------*/
 
 export default function Home() {
-    
+/*-----------------------
+#########################
+useState Hook
+#########################
+-------------------------*/
+
     const [ gameState, setGameState ] = useState({
         deck: [],
         playerName: '',
@@ -45,6 +54,12 @@ export default function Home() {
         gameplayCounter: 0,
         dealer: ''
     })
+
+/*-----------------------
+#########################
+Card class & Deck Factory
+#########################
+-------------------------*/
 
     const suit = ['Clubs', 'Spades', 'Diamonds', 'Hearts'];
     const vals = [1,2,3,4,5,6,7,8,9,10,11,12,13];
@@ -92,6 +107,12 @@ export default function Home() {
         }
     }
 
+/*-----------------------
+#########################
+LOGIC FUNCTIONS
+#########################
+-------------------------*/
+    // initializes an instance of the Deck, which includes 52 instances of the Cards; updates state
     const createDeck = () => {
         const myDeck = new Deck();
         myDeck.generateDeck(store)
@@ -101,8 +122,8 @@ export default function Home() {
         })
     }
 
+    // Assigns 6 cards to each player & updates state
     const dealCards = () => {
-        // dealing 6 cards to each player
         let player1Array = [];
         let player2Array = [];
         let i = 0;

@@ -1,6 +1,8 @@
-
-
-export default function singleCard(props) {
+/*-----------------------
+#########################
+STYLING
+#########################
+-------------------------*/
     const cardStyle = {
         backgroundColor: 'white',
         border: 'black 2px solid',
@@ -11,8 +13,11 @@ export default function singleCard(props) {
         gridTemplateColumns: '33% 33% 33%',
         gridTemplateRows: '20% 20% 20% 20%' 
     }
+
+// Changes color of suit symbol & number based on suit
     let color = props.card.suit === 'Hearts' || props.card.suit === 'Diamonds' ? 'red' : 'black';
 
+// CSS grid assignments
     const firstStyle = {
         color: color,
         gridColumn: '1/2',
@@ -37,6 +42,19 @@ export default function singleCard(props) {
         gridRow: '4/5'
     }
 
+
+/*-----------------------
+#########################
+FUNCTIONAL COMPONENT
+#########################
+-------------------------*/
+export default function singleCard(props) {
+
+/*-----------------------
+#########################
+CREATE UNICODE SYMBOLS
+#########################
+-------------------------*/
     const convertToUnicode = () => {
         if(props.card.suit === 'Hearts') {
             return '\u2665';
@@ -49,6 +67,11 @@ export default function singleCard(props) {
         }
     }
 
+/*-----------------------
+#########################
+ENABLE CONVERSION FROM UNICODE TO CHAR CODES
+#########################
+-------------------------*/
     const convertUnicode = (input) => {
         return input.replace(/\\u(\w\w\w\w)/g,function(a,b) {
             let charcode = parseInt(b,16);

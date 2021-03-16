@@ -11,7 +11,7 @@ export default function Instructions() {
         </header>
 
         <div class="video">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/ttkfRm5pZr4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="hideVideo" allowfullscreen></iframe>
+            <iframe title="instructions" width="560" height="315" src="https://www.youtube.com/embed/ttkfRm5pZr4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" class="hideVideo" allowfullscreen></iframe>
         </div>
 
         <main>
